@@ -87,5 +87,7 @@ if (isset($_POST['name'], $_POST['value'])) {
 <input type="submit" />
 </form>
 <p>Try setting cookies on the <a href="//<?= $main; ?>/cookies.php">main domain</a>, either explicitly, with leading dot, or with domain unspecified. Then try visiting subdomains (e.g. <a href="//a.<?= $main; ?>/cookies.php">a.<?= $main; ?></a>, <a href="//b.<?= $main; ?>/cookies.php">b.<?= $main; ?></a>) and see which cookies are sent.</p>
+
+<p><a href="https://gist.github.com/cmbuckley/609c2ed0bbebbbbb569bb81ebedc7abd">Source</a></p>
 </body>
 </html>
