@@ -71,8 +71,8 @@ if (isset($_POST['name'], $_POST['value'])) {
 
 <form action="" method="post">
 <p>Set cookie
-<input name="name" pattern="[a-z0-9]+" value="<?= $name; ?>" /> =
-<input name="value" pattern="[a-z0-9]+" value="<?= $value ?>" /> (alphanumeric)
+<input name="name" pattern="[A-Za-z0-9]+" value="<?= $name; ?>" /> =
+<input name="value" pattern="[A-Za-z0-9]+" value="<?= $value ?>" /> (alphanumeric)
 </p>
 
 <p>Set cookie on:
