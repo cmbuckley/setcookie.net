@@ -38,15 +38,16 @@ if (isset($_POST['name'], $_POST['value'])) {
     $warn = false;
     $name = $_POST['name'];
     $value = $_POST['value'];
+    $secure = (isset($_POST['sec']) && $_POST['sec'] === 'on');
 
     if (!empty($name) && !empty($value)) {
         if (ctype_alnum($name) && ctype_alnum($value)) {
             if ($_POST['dom'] == 'none') {
-                header("Set-Cookie: $name=$value; path=/; httponly");
+                header("Set-Cookie: $name=$value; path=/; httponly" . ($secure ? '; secure' : ''));
             }
             else {
                 $dom = ($_POST['dom'] == 'main' ? $main : ($_POST['dom'] == 'dot' ? ".$main" : $host));
-                setcookie($name, $value, 0, '/', $dom, false, true);
+                setcookie($name, $value, 0, '/', $dom, $secure, true);
             }
 
             echo '<p class="success">Sent header: <code>' . headers_list()[0] . '</code></p>';
@@ -84,9 +85,17 @@ if (isset($_POST['name'], $_POST['value'])) {
 <label><input type="radio" name="dom" value="none" />(unspecified)</label>
 </p>
 
+<?php if (isset($_SERVER['HTTPS'])): ?>
+<p><label>Set secure-only cookie: <input type="checkbox" name="sec" /></label></p>
+<?php endif; ?>
+
 <input type="submit" />
 </form>
-<p>Try setting cookies on the <a href="//<?= $main; ?>/cookies.php">main domain</a>, either explicitly, with leading dot, or with domain unspecified. Then try visiting subdomains (e.g. <a href="//a.<?= $main; ?>/cookies.php">a.<?= $main; ?></a>, <a href="//b.<?= $main; ?>/cookies.php">b.<?= $main; ?></a>) and see which cookies are sent.</p>
+<p>Try setting cookies on the <a href="https://<?= $main; ?>/cookies.php">main domain</a>,
+either explicitly, with leading dot, or with domain unspecified.
+Then try visiting subdomains (e.g. <a href="https://a.<?= $main; ?>/cookies.php">a.<?= $main; ?></a>,
+<a href="https://b.<?= $main; ?>/cookies.php">b.<?= $main; ?></a>,
+<a href="http://insecure.<?= $main; ?>/cookies.php">insecure.<?= $main; ?></a>) and see which cookies are sent.</p>
 
 <p><a href="https://gist.github.com/cmbuckley/609c2ed0bbebbbbb569bb81ebedc7abd">Source</a></p>
 </body>
