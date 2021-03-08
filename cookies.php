@@ -97,6 +97,6 @@ Then try visiting subdomains (e.g. <a href="https://a.<?= $main; ?>/cookies.php"
 <a href="https://b.<?= $main; ?>/cookies.php">b.<?= $main; ?></a>,
 <a href="http://insecure.<?= $main; ?>/cookies.php">insecure.<?= $main; ?></a>) and see which cookies are sent.</p>
 
-<p><a href="https://gist.github.com/cmbuckley/609c2ed0bbebbbbb569bb81ebedc7abd">Source</a></p>
+<p>Originally created for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://gist.github.com/cmbuckley/609c2ed0bbebbbbb569bb81ebedc7abd">View the source here</a>.</p>
 </body>
 </html>
