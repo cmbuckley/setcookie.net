@@ -34,23 +34,46 @@ else {
     echo '<p>Received no cookies.</p>';
 }
 
+function samesite() {
+    $ss = (isset($_POST['ss']) ? $_POST['ss'] : 'notset');
+    if (in_array($ss, ['none', 'lax', 'strict'])) { return ucfirst($ss); }
+}
+
+function sentheader() {
+    return array_filter(headers_list(), function ($h) {
+        return stripos($h, 'Set-Cookie') !== false;
+    })[0];
+}
+
 if (isset($_POST['name'], $_POST['value'])) {
     $warn = false;
     $name = $_POST['name'];
     $value = $_POST['value'];
     $secure = (isset($_POST['sec']) && $_POST['sec'] === 'on');
+    $samesite = samesite();
 
     if (!empty($name) && !empty($value)) {
         if (ctype_alnum($name) && ctype_alnum($value)) {
             if ($_POST['dom'] == 'none') {
-                header("Set-Cookie: $name=$value; path=/; httponly" . ($secure ? '; secure' : ''));
+                header(
+                    "Set-Cookie: $name=$value; path=/; httponly" .
+                    ($secure ? '; secure' : '') . ($samesite ? "; SameSite=$samesite" : '')
+                );
             }
             else {
                 $dom = ($_POST['dom'] == 'main' ? $main : ($_POST['dom'] == 'dot' ? ".$main" : $host));
-                setcookie($name, $value, 0, '/', $dom, $secure, true);
+                $opts = [
+                    'expires'  => 0,
+                    'path'     => '/',
+                    'domain'   => $dom,
+                    'secure'   => $secure,
+                    'httponly' => true,
+                ];
+                if (isset($samesite)) { $opts['samesite'] = $samesite; }
+                setcookie($name, $value, $opts);
             }
 
-            echo '<p class="success">Sent header: <code>' . headers_list()[0] . '</code></p>';
+            echo '<p class="success">Sent header: <code>' . sentheader() . '</code></p>';
         }
         else {
             $warn = 'name and value must be alpanumeric';
@@ -72,8 +95,8 @@ if (isset($_POST['name'], $_POST['value'])) {
 
 <form action="" method="post">
 <p>Set cookie
-<input name="name" pattern="[A-Za-z0-9]+" value="<?= $name; ?>" /> =
-<input name="value" pattern="[A-Za-z0-9]+" value="<?= $value ?>" /> (alphanumeric)
+<input name="name" pattern="[A-Za-z0-9_-]+" value="<?= $name; ?>" /> =
+<input name="value" pattern="[A-Za-z0-9_-]+" value="<?= $value ?>" /> (restricted character set compared to <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#attributes">spec</a>)
 </p>
 
 <p>Set cookie on:
@@ -83,6 +106,15 @@ if (isset($_POST['name'], $_POST['value'])) {
 <label><input type="radio" name="dom" value="main" /><?= $main; ?></label>
 <label><input type="radio" name="dom" value="dot" />.<?= $main; ?></label>
 <label><input type="radio" name="dom" value="none" />(unspecified)</label>
+</p>
+
+<p>SameSite:
+<?php if (isset($_SERVER['HTTPS'])): ?>
+<label><input type="radio" name="ss" value="none" />None</label>
+<?php endif; ?>
+<label><input type="radio" name="ss" value="lax" />Lax</label>
+<label><input type="radio" name="ss" value="strict" />Strict</label>
+<label><input type="radio" name="ss" value="notset" checked />(not set)</label> <i>(should <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#cookies_without_samesite_default_to_samesitelax">behave like Lax</a>)</i>
 </p>
 
 <?php if (isset($_SERVER['HTTPS'])): ?>
