@@ -47,13 +47,16 @@ function sentheader() {
 
 if (isset($_POST['name'], $_POST['value'])) {
     $warn = false;
-    $name = $_POST['name'];
-    $value = $_POST['value'];
+    $unsafe = '/[^a-z\d_-]/i'; // purposefully a bit stricter than the spec
+    $rawName = $_POST['name'];
+    $rawValue = $_POST['value'];
+    $name = preg_replace($unsafe, '', $rawName);
+    $value = preg_replace($unsafe, '', $rawValue);
     $secure = (isset($_POST['sec']) && $_POST['sec'] === 'on');
     $samesite = samesite();
 
     if (!empty($name) && !empty($value)) {
-        if (ctype_alnum($name) && ctype_alnum($value)) {
+        if ($rawName === $name && $rawValue === $value) {
             if ($_POST['dom'] == 'none') {
                 header(
                     "Set-Cookie: $name=$value; path=/; httponly" .
@@ -76,9 +79,7 @@ if (isset($_POST['name'], $_POST['value'])) {
             echo '<p class="success">Sent header: <code>' . sentheader() . '</code></p>';
         }
         else {
-            $warn = 'name and value must be alpanumeric';
-            $name = preg_replace('/[^a-z\d]/i', '', $name);
-            $value = preg_replace('/[^a-z\d]/i', '', $value);
+            $warn = 'name and value must be alphanumeric or one of <samp>_-</samp>';
         }
     }
     else {
@@ -96,7 +97,7 @@ if (isset($_POST['name'], $_POST['value'])) {
 <form action="" method="post">
 <p>Set cookie
 <input name="name" pattern="[A-Za-z0-9_-]+" value="<?= $name; ?>" /> =
-<input name="value" pattern="[A-Za-z0-9_-]+" value="<?= $value ?>" /> (restricted character set compared to <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#attributes">spec</a>)
+<input name="value" pattern="[A-Za-z0-9_-]+" value="<?= $value ?>" /> (alphanumeric or <samp>_-</samp>; restricted character set compared to <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#attributes">spec</a>)
 </p>
 
 <p>Set cookie on:
