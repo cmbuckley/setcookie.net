@@ -115,7 +115,7 @@ if (isset($_POST['name'], $_POST['value'])) {
 <?php endif; ?>
 <label><input type="radio" name="ss" value="lax" />Lax</label>
 <label><input type="radio" name="ss" value="strict" />Strict</label>
-<label><input type="radio" name="ss" value="notset" checked />(not set)</label> <i>(should <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#cookies_without_samesite_default_to_samesitelax">behave like Lax</a>)</i>
+<label><input type="radio" name="ss" value="notset" checked />(not set)</label> <i>(<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#cookies_without_samesite_default_to_samesitelax">behaves like Lax</a> in most browsers, but see <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#browser_compatibility">exceptions</a>)</i>
 </p>
 
 <?php if (isset($_SERVER['HTTPS'])): ?>
