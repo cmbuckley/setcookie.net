@@ -97,7 +97,7 @@ if (isset($_POST['name'], $_POST['value'])) {
 <form action="" method="post">
 <p>Set cookie
 <input name="name" pattern="[A-Za-z0-9_-]+" value="<?= $name; ?>" /> =
-<input name="value" pattern="[A-Za-z0-9_-]+" value="<?= $value ?>" /> (alphanumeric or <samp>_-</samp>; restricted character set compared to <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#attributes">spec</a>)
+<input name="value" pattern="[A-Za-z0-9_-]+" value="<?= $value ?>" /> (alphanumeric or <kbd>_-</kbd>; restricted character set compared to <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#attributes">spec</a>)
 </p>
 
 <p>Set cookie on:
@@ -122,6 +122,7 @@ if (isset($_POST['name'], $_POST['value'])) {
 <p><label>Set secure-only cookie: <input type="checkbox" name="sec" /></label></p>
 <?php endif; ?>
 
+<p>Will result in the following cookie: <samp /></p>
 <input type="submit" />
 </form>
 <p>Try setting cookies on the <a href="https://<?= $main; ?>/cookies.php">main domain</a>,
@@ -131,5 +132,39 @@ Then try visiting subdomains (e.g. <a href="https://a.<?= $main; ?>/cookies.php"
 <a href="http://insecure.<?= $main; ?>/cookies.php">insecure.<?= $main; ?></a>) and see which cookies are sent.</p>
 
 <p>Originally created for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://gist.github.com/cmbuckley/609c2ed0bbebbbbb569bb81ebedc7abd">View the source here</a>.</p>
+<script>
+function header(form) {
+    let header = `Set-Cookie: ${form.name.value}=${form.value.value}; path=/`;
+
+    if (form.dom.value && form.dom.value != 'none') {
+        form.dom.forEach(function (input) {
+            if (input.value == form.dom.value) {
+                header += '; domain=' + input.labels[0].innerText;
+            }
+        });
+    }
+
+    if (form.sec.checked) {
+        header += '; secure';
+    }
+
+    header += '; HttpOnly';
+
+    if (form.ss.value && form.ss.value != 'notset') {
+        form.ss.forEach(function (input) {
+            if (input.value == form.ss.value) {
+                header += '; SameSite=' + input.labels[0].innerText;
+            }
+        });
+    }
+
+    return header;
+}
+document.querySelector('form').addEventListener('input', function () {
+    if (this.name.value && this.value.value) {
+        this.querySelector('samp').innerText = header(this);
+    }
+});
+</script>
 </body>
 </html>
