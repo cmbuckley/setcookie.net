@@ -144,7 +144,7 @@ function header(form) {
         });
     }
 
-    if (form.sec.checked) {
+    if (form.sec && form.sec.checked) {
         header += '; secure';
     }
 
