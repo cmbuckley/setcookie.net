@@ -106,7 +106,7 @@ if (isset($_POST['name'], $_POST['value'])) {
 <?php endif; ?>
 <label><input type="radio" name="dom" value="main" /><?= $main; ?></label>
 <label><input type="radio" name="dom" value="dot" />.<?= $main; ?></label>
-<label><input type="radio" name="dom" value="none" />(unspecified)</label>
+<label><input type="radio" name="dom" value="none" checked />(unspecified)</label>
 </p>
 
 <p>SameSite:
