@@ -5,6 +5,17 @@ $host = $_SERVER['HTTP_HOST'];
 $secure = (isset($_SERVER['HTTP_X_FORWARDED_SSL']) ? $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
 $name = $value = '';
 
+function samesite() {
+    $ss = (isset($_POST['ss']) ? $_POST['ss'] : 'notset');
+    if (in_array($ss, ['none', 'lax', 'strict'])) { return ucfirst($ss); }
+}
+
+function sentheader() {
+    return current(array_filter(headers_list(), function ($h) {
+        return stripos($h, 'Set-Cookie') !== false;
+    }));
+}
+
 // make sure it's using the main URL
 if (strpos($host, $main) === false) {
     header("Location: https://$main");
@@ -15,6 +26,48 @@ if (strpos($host, $main) === false) {
 if ($secure != (strpos($host, 'insecure.' . $main) === false)) {
     header(sprintf('Location: http%s://%s', $secure ? '' : 's', $host));
     return;
+}
+
+if (isset($_POST['name'], $_POST['value'])) {
+    $warn = $message = '';
+    $unsafe = '/[^a-z\d_-]/i'; // purposefully a bit stricter than the spec
+    $rawName = $_POST['name'];
+    $rawValue = $_POST['value'];
+    $name = preg_replace($unsafe, '', $rawName);
+    $value = preg_replace($unsafe, '', $rawValue);
+    $secure = (isset($_POST['sec']) && $_POST['sec'] === 'on');
+    $samesite = samesite();
+
+    if (!empty($name) && !empty($value)) {
+        if ($rawName === $name && $rawValue === $value) {
+            if (!isset($_POST['dom']) || $_POST['dom'] == 'none') {
+                header(
+                    "Set-Cookie: $name=$value; path=/; httponly" .
+                    ($secure ? '; secure' : '') . ($samesite ? "; SameSite=$samesite" : '')
+                );
+            }
+            else {
+                $dom = ($_POST['dom'] == 'main' ? $main : ($_POST['dom'] == 'dot' ? ".$main" : $host));
+                $opts = [
+                    'expires'  => 0,
+                    'path'     => '/',
+                    'domain'   => $dom,
+                    'secure'   => $secure,
+                    'httponly' => true,
+                ];
+                if (isset($samesite)) { $opts['samesite'] = $samesite; }
+                setcookie($name, $value, $opts);
+            }
+
+            $message = '<p class="success">Sent header: <code>' . sentheader() . '</code></p>';
+        }
+        else {
+            $warn = 'name and value must be alphanumeric or one of <samp>_-</samp>';
+        }
+    }
+    else {
+        $warn = 'must supply cookie name and value';
+    }
 }
 
 ?>
@@ -47,60 +100,11 @@ else {
     echo '<p>Received no cookies.</p>';
 }
 
-function samesite() {
-    $ss = (isset($_POST['ss']) ? $_POST['ss'] : 'notset');
-    if (in_array($ss, ['none', 'lax', 'strict'])) { return ucfirst($ss); }
-}
-
-function sentheader() {
-    return array_filter(headers_list(), function ($h) {
-        return stripos($h, 'Set-Cookie') !== false;
-    })[0];
-}
-
 if (isset($_POST['name'], $_POST['value'])) {
-    $warn = false;
-    $unsafe = '/[^a-z\d_-]/i'; // purposefully a bit stricter than the spec
-    $rawName = $_POST['name'];
-    $rawValue = $_POST['value'];
-    $name = preg_replace($unsafe, '', $rawName);
-    $value = preg_replace($unsafe, '', $rawValue);
-    $secure = (isset($_POST['sec']) && $_POST['sec'] === 'on');
-    $samesite = samesite();
-
-    if (!empty($name) && !empty($value)) {
-        if ($rawName === $name && $rawValue === $value) {
-            if ($_POST['dom'] == 'none') {
-                header(
-                    "Set-Cookie: $name=$value; path=/; httponly" .
-                    ($secure ? '; secure' : '') . ($samesite ? "; SameSite=$samesite" : '')
-                );
-            }
-            else {
-                $dom = ($_POST['dom'] == 'main' ? $main : ($_POST['dom'] == 'dot' ? ".$main" : $host));
-                $opts = [
-                    'expires'  => 0,
-                    'path'     => '/',
-                    'domain'   => $dom,
-                    'secure'   => $secure,
-                    'httponly' => true,
-                ];
-                if (isset($samesite)) { $opts['samesite'] = $samesite; }
-                setcookie($name, $value, $opts);
-            }
-
-            echo '<p class="success">Sent header: <code>' . sentheader() . '</code></p>';
-        }
-        else {
-            $warn = 'name and value must be alphanumeric or one of <samp>_-</samp>';
-        }
-    }
-    else {
-        $warn = 'must supply cookie name and value';
-    }
-
     if ($warn) {
         echo '<p class="error">' . $warn . '</p>';
+    } else {
+        echo $message;
     }
 }
 
