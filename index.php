@@ -41,23 +41,24 @@ if (isset($_POST['name'], $_POST['value'])) {
     if (!empty($name) && !empty($value)) {
         if ($rawName === $name && $rawValue === $value) {
             if (!isset($_POST['dom']) || $_POST['dom'] == 'none') {
-                header(
-                    "Set-Cookie: $name=$value; path=/; httponly" .
-                    ($secure ? '; secure' : '') . ($samesite ? "; SameSite=$samesite" : '')
-                );
+                $dom = '';
+            } elseif ($_POST['dom'] == 'main') {
+                $dom = $main;
+            } elseif ($_POST['dom'] == 'dot') {
+                $dom = ".$main";
+            } else {
+                $dom = $host;
             }
-            else {
-                $dom = ($_POST['dom'] == 'main' ? $main : ($_POST['dom'] == 'dot' ? ".$main" : $host));
-                $opts = [
-                    'expires'  => 0,
-                    'path'     => '/',
-                    'domain'   => $dom,
-                    'secure'   => $secure,
-                    'httponly' => true,
-                ];
-                if (isset($samesite)) { $opts['samesite'] = $samesite; }
-                setcookie($name, $value, $opts);
-            }
+
+            $opts = [
+                'expires'  => 0,
+                'path'     => '/',
+                'domain'   => $dom,
+                'secure'   => $secure,
+                'httponly' => true,
+            ];
+            if (isset($samesite)) { $opts['samesite'] = $samesite; }
+            setcookie($name, $value, $opts);
 
             $message = '<p class="success">Sent header: <code>' . sentheader() . '</code></p>';
         }
