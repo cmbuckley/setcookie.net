@@ -5,6 +5,12 @@ $host = $_SERVER['HTTP_HOST'];
 $secure = (isset($_SERVER['HTTP_X_FORWARDED_SSL']) ? $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
 $name = $value = '';
 
+// make sure it's using the main URL
+if (strpos($host, $main) === false) {
+    header("Location: https://$main");
+    return;
+}
+
 // if http, or https with insecure domain, redirect to correct protocol
 if ($secure != (strpos($host, 'insecure.' . $main) === false)) {
     header(sprintf('Location: http%s://%s', $secure ? '' : 's', $host));
