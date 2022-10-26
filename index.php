@@ -2,7 +2,7 @@
 
 $main = 'setcookie.net';
 $host = $_SERVER['HTTP_HOST'];
-$secure = (isset($_SERVER['HTTP_X_FORWARDED_SSL']) ? $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
+$https = (isset($_SERVER['HTTP_X_FORWARDED_SSL']) ? $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
 $name = $value = '';
 
 function samesite() {
@@ -23,8 +23,8 @@ if (strpos($host, $main) === false) {
 }
 
 // if http, or https with insecure domain, redirect to correct protocol
-if ($secure != (strpos($host, 'insecure.' . $main) === false)) {
-    header(sprintf('Location: http%s://%s', $secure ? '' : 's', $host));
+if ($https != (strpos($host, 'insecure.' . $main) === false)) {
+    header(sprintf('Location: http%s://%s', $https ? '' : 's', $host));
     return;
 }
 
@@ -127,7 +127,7 @@ if (isset($_POST['name'], $_POST['value'])) {
 </p>
 
 <p>SameSite:
-<?php if (isset($_SERVER['HTTPS'])): ?>
+<?php if ($https): ?>
 <label><input type="radio" name="ss" value="none" />None</label>
 <?php endif; ?>
 <label><input type="radio" name="ss" value="lax" />Lax</label>
@@ -135,7 +135,7 @@ if (isset($_POST['name'], $_POST['value'])) {
 <label><input type="radio" name="ss" value="notset" checked />(not set)</label> <i>(<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#cookies_without_samesite_default_to_samesitelax">behaves like Lax</a> in most browsers, but see <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#browser_compatibility">exceptions</a>)</i>
 </p>
 
-<?php if (isset($_SERVER['HTTPS'])): ?>
+<?php if ($https): ?>
 <p><label>Set secure-only cookie: <input type="checkbox" name="sec" /></label></p>
 <?php endif; ?>
 
