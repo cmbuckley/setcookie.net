@@ -138,7 +138,7 @@ Then try visiting subdomains (e.g. <a href="https://a.<?= $main; ?>">a.<?= $main
 <a href="https://b.<?= $main; ?>">b.<?= $main; ?></a>,
 <a href="http://insecure.<?= $main; ?>">insecure.<?= $main; ?></a>) and see which cookies are sent.</p>
 
-<p>Originally created for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://gist.github.com/cmbuckley/609c2ed0bbebbbbb569bb81ebedc7abd">View the source here</a>.</p>
+<p>Originally created for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://github.com/cmbuckley/setcookie.net">View the source here</a>.</p>
 <script>
 function header(form) {
     let header = `Set-Cookie: ${form.name.value}=${form.value.value}; path=/`;
