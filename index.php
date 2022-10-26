@@ -17,7 +17,7 @@ function sentheader() {
 }
 
 // make sure it's using the main URL
-if (strpos($host, $main) === false) {
+if (getenv('FLY_APP_NAME') && strpos($host, $main) === false) {
     header("Location: https://$main");
     return;
 }
