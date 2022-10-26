@@ -1,8 +1,15 @@
 <?php
 
-$main = 'scripts.cmbuckley.co.uk';
+$main = 'setcookie.net';
 $host = $_SERVER['HTTP_HOST'];
+$secure = (isset($_SERVER['HTTP_X_FORWARDED_SSL']) ? $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
 $name = $value = '';
+
+// if http, or https with insecure domain, redirect to correct protocol
+if ($secure != (strpos($host, 'insecure.' . $main) === false)) {
+    header(sprintf('Location: http%s://%s', $secure ? '' : 's', $host));
+    return;
+}
 
 ?>
 <!doctype html>
@@ -125,11 +132,11 @@ if (isset($_POST['name'], $_POST['value'])) {
 <p>Will result in the following cookie: <samp /></p>
 <input type="submit" />
 </form>
-<p>Try setting cookies on the <a href="https://<?= $main; ?>/cookies.php">main domain</a>,
+<p>Try setting cookies on the <a href="https://<?= $main; ?>">main domain</a>,
 either explicitly, with leading dot, or with domain unspecified.
-Then try visiting subdomains (e.g. <a href="https://a.<?= $main; ?>/cookies.php">a.<?= $main; ?></a>,
-<a href="https://b.<?= $main; ?>/cookies.php">b.<?= $main; ?></a>,
-<a href="http://insecure.<?= $main; ?>/cookies.php">insecure.<?= $main; ?></a>) and see which cookies are sent.</p>
+Then try visiting subdomains (e.g. <a href="https://a.<?= $main; ?>">a.<?= $main; ?></a>,
+<a href="https://b.<?= $main; ?>">b.<?= $main; ?></a>,
+<a href="http://insecure.<?= $main; ?>">insecure.<?= $main; ?></a>) and see which cookies are sent.</p>
 
 <p>Originally created for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://gist.github.com/cmbuckley/609c2ed0bbebbbbb569bb81ebedc7abd">View the source here</a>.</p>
 <script>
