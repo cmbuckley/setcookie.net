@@ -22,12 +22,6 @@ if (getenv('FLY_APP_NAME') && strpos($host, $main) === false) {
     return;
 }
 
-// if http, or https with insecure domain, redirect to correct protocol
-if ($https != (strpos($host, 'insecure.' . $main) === false)) {
-    header(sprintf('Location: http%s://%s', $https ? '' : 's', $host));
-    return;
-}
-
 if (isset($_POST['name'], $_POST['value'])) {
     $warn = $message = '';
     $unsafe = '/[^a-z\d_-]/i'; // purposefully a bit stricter than the spec
