@@ -95,6 +95,13 @@ if (isset($_POST['name'], $_POST['value'])) {
         <p>Domain: <?= $host; ?></p>
       </hgroup>
 
+      <p>Try setting cookies on the <a href="https://<?= $main; ?>">main domain</a>,
+      either explicitly, with leading dot, or with domain unspecified.
+      Then try visiting different URLs (e.g. <a href="https://a.<?= $main; ?>">a.<?= $main; ?></a>,
+      <a href="https://b.<?= $main; ?>">b.<?= $main; ?></a>,
+      <a href="https://a.b.<?= $main; ?>">a.b.<?= $main; ?></a>,
+      <a href="http://<?= $main; ?>">http instead of https</a>) and see which cookies are sent.</p>
+
       <article>
 <?php
 
@@ -167,12 +174,6 @@ if (isset($_POST['name'], $_POST['value'])) {
         <input type="submit" />
       </form>
 
-      <p>Try setting cookies on the <a href="https://<?= $main; ?>">main domain</a>,
-      either explicitly, with leading dot, or with domain unspecified.
-      Then try visiting different URLs (e.g. <a href="https://a.<?= $main; ?>">a.<?= $main; ?></a>,
-      <a href="https://b.<?= $main; ?>">b.<?= $main; ?></a>,
-      <a href="https://a.b.<?= $main; ?>">a.b.<?= $main; ?></a>,
-      <a href="http://<?= $main; ?>">http instead of https</a>) and see which cookies are sent.</p>
       <footer>
         <p><small>Created by <a href="https://cmbuckley.co.uk">Chris Buckley</a> for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://github.com/cmbuckley/setcookie.net">View the source here</a>.</small></p>
       </footer>
