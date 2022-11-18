@@ -23,7 +23,7 @@ if (getenv('FLY_APP_NAME') && strpos($host, $main) === false) {
 }
 
 if (isset($_POST['name'], $_POST['value'])) {
-    $warn = $message = '';
+    $error = $warn = $message = '';
     $unsafe = '/[^a-z\d_-]/i'; // purposefully a bit stricter than the spec
     $rawName = $_POST['name'];
     $rawValue = $_POST['value'];
@@ -52,16 +52,23 @@ if (isset($_POST['name'], $_POST['value'])) {
                 'httponly' => true,
             ];
             if (isset($samesite)) { $opts['samesite'] = $samesite; }
-            setcookie($name, $value, $opts);
 
-            $message = '<p class="success">Sent header: <code>' . sentheader() . '</code></p>';
+            if (preg_match('/^__Secure-/', $name) && (!$https || !$secure)) {
+                $warn = 'Cookies with names starting <code>__Secure-</code> must have the <code>secure</code> flag and be set via HTTPS.';
+            }
+            else if (preg_match('/__Host-/', $name) && (!$https || !$secure || $dom !== '')) {
+                $warn = 'Cookies with names starting <code>__Host-</code> must have the <code>secure</code> flag, be set via HTTPS and must not have a domain specified';
+            }
+
+            setcookie($name, $value, $opts);
+            $message = 'Sent header: <code>' . sentheader() . '</code>';
         }
         else {
-            $warn = 'name and value must be alphanumeric or one of <samp>_-</samp>';
+            $error = 'name and value must be alphanumeric or one of <samp>_-</samp>';
         }
     }
     else {
-        $warn = 'must supply cookie name and value';
+        $error = 'must supply cookie name and value';
     }
 }
 
@@ -73,6 +80,8 @@ if (isset($_POST['name'], $_POST['value'])) {
 .action { border: 1px solid black; width: 50%; padding: 1em; }
 .success { color: green; }
 .error { color: red; }
+.warning { color: orange; }
+.warning::before { content: '⚠️ '; }
 </style>
 </head>
 <body>
@@ -96,10 +105,14 @@ else {
 }
 
 if (isset($_POST['name'], $_POST['value'])) {
-    if ($warn) {
-        echo '<p class="error">' . $warn . '</p>';
+    if ($error) {
+        echo '<p class="error">' . $error . '</p>';
     } else {
-        echo $message;
+        echo '<p class="success">' . $message . '</p>';
+
+        if ($warn) {
+            echo '<p class="warning">' . $warn . '</p>';
+        }
     }
 }
 
