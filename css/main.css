@@ -1,0 +1,31 @@
+body > :where(header, footer, main), section {
+  --block-spacing-vertical: calc(var(--spacing) * 2) !important;
+}
+
+/* https://github.com/picocss/pico/pull/271 */
+.grid + small {
+  display: block;
+  width: 100%;
+  margin-top: calc(var(--spacing) * -0.75);
+  margin-bottom: var(--spacing);
+}
+
+:where(label, .grid) + small {
+  color: var(--muted-color);
+}
+
+.success {
+  color: green;
+}
+
+.error {
+  color: red;
+}
+
+.warning {
+  color: orange;
+}
+
+.warning::before {
+  content: '⚠️ ';
+}

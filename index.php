@@ -75,20 +75,20 @@ if (isset($_POST['name'], $_POST['value'])) {
 ?>
 <!doctype html>
 <html>
-<head>
-<style>
-.action { border: 1px solid black; width: 50%; padding: 1em; }
-.success { color: green; }
-.error { color: red; }
-.warning { color: orange; }
-.warning::before { content: '⚠️ '; }
-</style>
-</head>
-<body>
-<h1>Cookie Test</h1>
-<p>Domain: <?= $host; ?></p>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/picocss/1.5.6/pico.min.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+  <body>
+    <main class="container">
+      <hgroup>
+        <h1>Cookie Test</h1>
+        <p>Domain: <?= $host; ?></p>
+      </hgroup>
 
-<div class="action">
+      <article>
 <?php
 
 if (count($_COOKIE)) {
@@ -117,79 +117,58 @@ if (isset($_POST['name'], $_POST['value'])) {
 }
 
 ?>
-</div>
+      </article>
 
-<form action="" method="post">
-<p>Set cookie
-<input name="name" pattern="[A-Za-z0-9_-]+" value="<?= $name; ?>" /> =
-<input name="value" pattern="[A-Za-z0-9_-]+" value="<?= $value ?>" /> (alphanumeric or <kbd>_-</kbd>; restricted character set compared to <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#attributes">spec</a>)
-</p>
+      <form action="" method="post">
+        <div class="grid">
+          <label for="name">
+            Cookie name
+            <input name="name" id="name" pattern="[A-Za-z0-9_-]+" value="<?= $name; ?>" />
+          </label>
 
-<p>Set cookie on:
-<?php if ($main != $host): ?>
-<label><input type="radio" name="dom" value="sub" checked /><?= $host; ?></label>
-<?php endif; ?>
-<label><input type="radio" name="dom" value="main" /><?= $main; ?></label>
-<label><input type="radio" name="dom" value="dot" />.<?= $main; ?></label>
-<label><input type="radio" name="dom" value="none" checked />(unspecified)</label>
-</p>
+          <label for="value">
+            Cookie value
+            <input name="value" id="value" pattern="[A-Za-z0-9_-]+" value="<?= $value ?>" />
+          </label>
+        </div>
+        <small>(alphanumeric or <code>_-</code>; restricted character set compared to <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#attributes">spec</a>)</small>
 
-<p>SameSite:
-<?php if ($https): ?>
-<label><input type="radio" name="ss" value="none" />None</label>
-<?php endif; ?>
-<label><input type="radio" name="ss" value="lax" />Lax</label>
-<label><input type="radio" name="ss" value="strict" />Strict</label>
-<label><input type="radio" name="ss" value="notset" checked />(not set)</label> <i>(<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#cookies_without_samesite_default_to_samesitelax">behaves like Lax</a> in most browsers, but see <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#browser_compatibility">exceptions</a>)</i>
-</p>
+        <p>Set cookie on:
+        <?php if ($main != $host): ?>
+        <label><input type="radio" name="dom" value="sub" checked /><?= $host; ?></label>
+        <?php endif; ?>
+        <label><input type="radio" name="dom" value="main" /><?= $main; ?></label>
+        <label><input type="radio" name="dom" value="dot" />.<?= $main; ?></label>
+        <label><input type="radio" name="dom" value="none" checked />(unspecified)</label>
+        </p>
 
-<?php if ($https): ?>
-<p><label>Set secure-only cookie: <input type="checkbox" name="sec" /></label></p>
-<?php endif; ?>
+        <p>SameSite:
+        <?php if ($https): ?>
+        <label><input type="radio" name="ss" value="none" />None</label>
+        <?php endif; ?>
+        <label><input type="radio" name="ss" value="lax" />Lax</label>
+        <label><input type="radio" name="ss" value="strict" />Strict</label>
+        <label><input type="radio" name="ss" value="notset" checked />(not set)</label>
+        <small>(<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#cookies_without_samesite_default_to_samesitelax">behaves like Lax</a> in most browsers, but see <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#browser_compatibility">exceptions</a>)</small>
+        </p>
 
-<p>Will result in the following cookie: <samp /></p>
-<input type="submit" />
-</form>
-<p>Try setting cookies on the <a href="https://<?= $main; ?>">main domain</a>,
-either explicitly, with leading dot, or with domain unspecified.
-Then try visiting different URLs (e.g. <a href="https://a.<?= $main; ?>">a.<?= $main; ?></a>,
-<a href="https://b.<?= $main; ?>">b.<?= $main; ?></a>,
-<a href="http://<?= $main; ?>">http instead of https</a>) and see which cookies are sent.</p>
+        <?php if ($https): ?>
+        <p><label>Set secure-only cookie: <input type="checkbox" name="sec" /></label></p>
+        <?php endif; ?>
 
-<p>Originally created for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://github.com/cmbuckley/setcookie.net">View the source here</a>.</p>
-<script>
-function header(form) {
-    let header = `Set-Cookie: ${form.name.value}=${form.value.value}; path=/`;
+        <p>Will result in the following cookie: <samp /></p>
+        <input type="submit" />
+      </form>
 
-    if (form.dom.value && form.dom.value != 'none') {
-        form.dom.forEach(function (input) {
-            if (input.value == form.dom.value) {
-                header += '; domain=' + input.labels[0].innerText;
-            }
-        });
-    }
-
-    if (form.sec && form.sec.checked) {
-        header += '; secure';
-    }
-
-    header += '; HttpOnly';
-
-    if (form.ss.value && form.ss.value != 'notset') {
-        form.ss.forEach(function (input) {
-            if (input.value == form.ss.value) {
-                header += '; SameSite=' + input.labels[0].innerText;
-            }
-        });
-    }
-
-    return header;
-}
-document.querySelector('form').addEventListener('input', function () {
-    if (this.name.value && this.value.value) {
-        this.querySelector('samp').innerText = header(this);
-    }
-});
-</script>
-</body>
+      <p>Try setting cookies on the <a href="https://<?= $main; ?>">main domain</a>,
+      either explicitly, with leading dot, or with domain unspecified.
+      Then try visiting different URLs (e.g. <a href="https://a.<?= $main; ?>">a.<?= $main; ?></a>,
+      <a href="https://b.<?= $main; ?>">b.<?= $main; ?></a>,
+      <a href="http://<?= $main; ?>">http instead of https</a>) and see which cookies are sent.</p>
+      <footer>
+        <p><small>Originally created for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://github.com/cmbuckley/setcookie.net">View the source here</a>.</small></p>
+      </footer>
+    </main>
+    <script src="/js/main.js"></script>
+  </body>
 </html>
