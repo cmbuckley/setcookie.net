@@ -166,7 +166,7 @@ if (isset($_POST['name'], $_POST['value'])) {
       <a href="https://b.<?= $main; ?>">b.<?= $main; ?></a>,
       <a href="http://<?= $main; ?>">http instead of https</a>) and see which cookies are sent.</p>
       <footer>
-        <p><small>Originally created for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://github.com/cmbuckley/setcookie.net">View the source here</a>.</small></p>
+        <p><small>Created by <a href="https://cmbuckley.co.uk">Chris Buckley</a> for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://github.com/cmbuckley/setcookie.net">View the source here</a>.</small></p>
       </footer>
     </main>
     <script src="/js/main.js"></script>
