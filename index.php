@@ -51,13 +51,20 @@ if (isset($_POST['name'], $_POST['value'])) {
                 'secure'   => $secure,
                 'httponly' => true,
             ];
-            if (isset($samesite)) { $opts['samesite'] = $samesite; }
+
+            if (isset($samesite)) {
+                $opts['samesite'] = $samesite;
+
+                if ($samesite == 'None' && !$secure) {
+                    $warn = 'Cookies with <code>SameSite=None</code> must also set the <code>secure</code> flag.';
+                }
+            }
 
             if (preg_match('/^__Secure-/', $name) && (!$https || !$secure)) {
                 $warn = 'Cookies with names starting <code>__Secure-</code> must have the <code>secure</code> flag and be set via HTTPS.';
             }
             else if (preg_match('/__Host-/', $name) && (!$https || !$secure || $dom !== '')) {
-                $warn = 'Cookies with names starting <code>__Host-</code> must have the <code>secure</code> flag, be set via HTTPS and must not have a domain specified';
+                $warn = 'Cookies with names starting <code>__Host-</code> must have the <code>secure</code> flag, be set via HTTPS and must not have a <code>domain</code> specified';
             }
 
             setcookie($name, $value, $opts);
