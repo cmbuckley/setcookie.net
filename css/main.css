@@ -14,6 +14,10 @@ body > :where(header, footer, main), section {
   color: var(--muted-color);
 }
 
+article > :last-child {
+  margin-bottom: 0;
+}
+
 .success {
   color: green;
 }

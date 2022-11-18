@@ -98,7 +98,7 @@ if (count($_COOKIE)) {
         echo "<li><code>$n = $v</code></li>\n";
     }
 
-    echo "</ul></p>\n\n";
+    echo "</ul>\n\n";
 }
 else {
     echo '<p>Received no cookies.</p>';
