@@ -1,3 +1,8 @@
+:root:not([data-theme=dark]), [data-theme=light] {
+  --primary: hsl(195deg, 85%, 35%);
+  --muted-color: hsl(205deg 9% 35%);
+}
+
 body > :where(header, footer, main), section {
   --block-spacing-vertical: calc(var(--spacing) * 2) !important;
 }
