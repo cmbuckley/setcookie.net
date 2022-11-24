@@ -10,14 +10,12 @@ function domains($host, $main) {
     $domains = [".$main", $main];
 
     if ($host != $main && str_ends_with($host, $main)) {
-        $subs = substr($host, 0, strpos($host, $main));
+        $subs = substr($host, 0, strpos($host, $main) - 1);
         $curr = ".$main";
 
-        foreach (array_reverse(explode('.', $subs)) as $sub) {
-            if ($sub) {
-                array_unshift($domains, ".$sub$curr", "$sub$curr");
-                $curr = ".$sub$curr";
-            }
+        foreach (array_slice(array_reverse(explode('.', $subs)), 0, 2) as $sub) {
+            array_unshift($domains, ".$sub$curr", "$sub$curr");
+            $curr = ".$sub$curr";
         }
     }
 
