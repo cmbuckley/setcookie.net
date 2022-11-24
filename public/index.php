@@ -5,6 +5,25 @@ $host = $_SERVER['HTTP_HOST'];
 $https = (isset($_SERVER['HTTP_X_FORWARDED_SSL']) ? $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
 $name = $value = '';
 
+// output domains that we can set this cookie on
+function domains($host, $main) {
+    $domains = [".$main", $main];
+
+    if ($host != $main && str_ends_with($host, $main)) {
+        $subs = substr($host, 0, strpos($host, $main));
+        $curr = ".$main";
+
+        foreach (array_reverse(explode('.', $subs)) as $sub) {
+            if ($sub) {
+                array_unshift($domains, ".$sub$curr", "$sub$curr");
+                $curr = ".$sub$curr";
+            }
+        }
+    }
+
+    return $domains;
+}
+
 function samesite() {
     $ss = (isset($_POST['ss']) ? $_POST['ss'] : 'notset');
     if (in_array($ss, ['none', 'lax', 'strict'])) { return ucfirst($ss); }
@@ -36,10 +55,8 @@ if (isset($_POST['name'], $_POST['value'])) {
         if ($rawName === $name && $rawValue === $value) {
             if (!isset($_POST['dom']) || $_POST['dom'] == 'none') {
                 $dom = '';
-            } elseif ($_POST['dom'] == 'main') {
-                $dom = $main;
-            } elseif ($_POST['dom'] == 'dot') {
-                $dom = ".$main";
+            } elseif (in_array($_POST['dom'], domains($host, $main))) {
+                $dom = $_POST['dom'];
             } else {
                 $dom = $host;
             }
@@ -149,12 +166,10 @@ if (isset($_POST['name'], $_POST['value'])) {
         </div>
         <small>(alphanumeric or <code>_-</code>; restricted character set compared to <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#attributes">spec</a>)</small>
 
-        <p>Set cookie on:
-        <?php if ($main != $host): ?>
-        <label><input type="radio" name="dom" value="sub" checked /><?= $host; ?></label>
-        <?php endif; ?>
-        <label><input type="radio" name="dom" value="main" /><?= $main; ?></label>
-        <label><input type="radio" name="dom" value="dot" />.<?= $main; ?></label>
+        <p>Cookie domain:
+        <?php foreach (domains($host, $main) as $domain): ?>
+        <label><input type="radio" name="dom" value="<?= $domain ?>" checked /><?= $domain; ?></label>
+        <?php endforeach; ?>
         <label><input type="radio" name="dom" value="none" checked />(unspecified)</label>
         </p>
 
