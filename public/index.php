@@ -47,6 +47,7 @@ if (isset($_POST['name'], $_POST['value'])) {
     $name = preg_replace($unsafe, '', $rawName);
     $value = preg_replace($unsafe, '', $rawValue);
     $secure = (isset($_POST['sec']) && $_POST['sec'] === 'on');
+    $httpOnly = (isset($_POST['httponly']) && $_POST['httponly'] === 'on');
     $samesite = samesite();
 
     if (!empty($name) && !empty($value)) {
@@ -64,7 +65,7 @@ if (isset($_POST['name'], $_POST['value'])) {
                 'path'     => '/',
                 'domain'   => $dom,
                 'secure'   => $secure,
-                'httponly' => true,
+                'httponly' => $httpOnly,
             ];
 
             if (isset($samesite)) {
@@ -166,7 +167,7 @@ if (isset($_POST['name'], $_POST['value'])) {
 
         <p>Cookie domain:
         <?php foreach (domains($host, $main) as $domain): ?>
-        <label><input type="radio" name="dom" value="<?= $domain ?>" checked /><?= $domain; ?></label>
+        <label><input type="radio" name="dom" value="<?= $domain ?>" /><?= $domain; ?></label>
         <?php endforeach; ?>
         <label><input type="radio" name="dom" value="none" checked />(unspecified)</label>
         </p>
@@ -184,6 +185,8 @@ if (isset($_POST['name'], $_POST['value'])) {
         <?php if ($https): ?>
         <p><label>Set secure-only cookie: <input type="checkbox" name="sec" /></label></p>
         <?php endif; ?>
+
+        <p><label>Set HTTP-only cookie: <input type="checkbox" name="httponly" checked /></label></p>
 
         <p>Will result in the following cookie: <samp /></p>
         <input type="submit" />
