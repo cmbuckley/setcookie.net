@@ -1,6 +1,6 @@
 <?php
 
-$main = 'setcookie.net';
+$main = (getenv('APP_ENV') == 'production' ? 'setcookie.net' : getenv('FLY_APP_NAME') . '.fly.dev');
 $host = $_SERVER['HTTP_HOST'];
 $https = (isset($_SERVER['HTTP_X_FORWARDED_SSL']) ? $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
 $name = $value = '';
@@ -34,7 +34,7 @@ function sentheader() {
 }
 
 // make sure it's using the main URL
-if (getenv('FLY_APP_NAME') && strpos($host, $main) === false) {
+if (getenv('APP_ENV') == 'production' && getenv('FLY_APP_NAME') && strpos($host, $main) === false) {
     header("Location: https://$main");
     return;
 }
