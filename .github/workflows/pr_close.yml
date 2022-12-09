@@ -15,7 +15,7 @@ jobs:
       - name: Destroy preview app
         id: destroy
         run: |
-          app_name="$(jq .Name < app.json)"
+          app_name="$(jq -r .Name < app.json)"
           flyctl apps destroy -y $app_name
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
