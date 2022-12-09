@@ -11,6 +11,7 @@ jobs:
       - uses: dawidd6/action-download-artifact@v2
         with:
           search_artifacts: true
+          if_no_artifact_found: ignore
           name: app-pr${{ github.event.pull_request.number }}
       - name: Deploy preview app
         id: deploy
