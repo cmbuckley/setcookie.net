@@ -9,14 +9,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - uses: dawidd6/action-download-artifact@v2
-        with:
-          search_artifacts: true
-          name: app-pr${{ github.event.pull_request.number }}
       - name: Destroy preview app
-        id: destroy
         run: |
-          app_name="$(jq -r .Name < app.json)"
-          flyctl apps destroy -y $app_name
+          flyctl apps destroy -y "setcookie-staging-${{ github.events.pull_request.number }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
