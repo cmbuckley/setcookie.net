@@ -8,10 +8,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
+      - uses: actions/download-artifact@v3
+        with:
+          name: app-pr${{ github.event.pull_request.number }}
       - name: Deploy preview app
         id: deploy
         run: |
-          flyctl apps create --generate-name -j > app.json
+          test app.json || flyctl apps create --generate-name -j > app.json
           app_name="$(jq -r .Name < app.json)"
           echo "app=$app_name" >> $GITHUB_OUTPUT
           flyctl deploy --remote-only -a $app_name -e APP_ENV=staging
