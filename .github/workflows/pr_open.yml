@@ -13,20 +13,10 @@ jobs:
           app_name="setcookie-staging-${{ github.event.pull_request.number }}"
           flyctl apps list | grep "$app_name" || flyctl apps create "$app_name"
           flyctl deploy --remote-only -a "$app_name" -e APP_ENV=staging
+          echo "${{ github.event.pull_request.number }}" > number.txt
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      - name: Find Comment
-        uses: peter-evans/find-comment@v2
-        id: find-comment
+      - uses: actions/upload-artifact@v3
         with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'github-actions[bot]'
-          body-includes: Your deploy preview
-      - name: Create comment
-        uses: peter-evans/create-or-update-comment@v2
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-id: ${{ steps.find-comment.outputs.comment-id }}
-          edit-mode: replace
-          body: >
-            Your deploy preview can be found at https://setcookie-staging-${{ github.event.pull_request.number }}.fly.dev.
+          name: pr-number
+          path: number.txt

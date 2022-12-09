@@ -1,0 +1,37 @@
+name: Add Deploy Preview Comment
+on:
+  workflow_run:
+    workflows: New Pull Request
+    types: completed
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: pr_open.yml
+          search_artifacts: true
+          name: pr-number
+          path: artifacts
+      - name: Set PR number
+        id: number
+        run: |
+          echo "number=$(< artifacts/number.txt)" >> $GITHUB_OUTPUT
+      - name: Find Comment
+        uses: peter-evans/find-comment@v2
+        id: find-comment
+        with:
+          issue-number: ${{ steps.number.outputs.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Your deploy preview
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ steps.number.outputs.number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: >
+            Your deploy preview can be found at https://setcookie-staging-${{ steps.number.outputs.number }}.fly.dev.
