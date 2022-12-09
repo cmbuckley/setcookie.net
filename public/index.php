@@ -34,7 +34,7 @@ function sentheader() {
 }
 
 // make sure it's using the main URL
-if (getenv('FLY_APP_NAME') && strpos($host, $main) === false) {
+if (getenv('APP_ENV') == 'production' && getenv('FLY_APP_NAME') && strpos($host, $main) === false) {
     header("Location: https://$main");
     return;
 }
