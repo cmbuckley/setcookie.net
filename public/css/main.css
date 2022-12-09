@@ -19,6 +19,16 @@ body > :where(header, footer, main), section {
   color: var(--muted-color);
 }
 
+article {
+  position: relative;
+}
+
+article .reload {
+  position: absolute;
+  right: 1em;
+  top: 1ex;
+}
+
 article > :last-child {
   margin-bottom: 0;
 }

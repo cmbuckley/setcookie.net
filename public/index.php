@@ -121,6 +121,7 @@ if (isset($_POST['name'], $_POST['value'])) {
       <a href="http://<?= $main; ?>">http instead of https</a>) and see which cookies are sent.</p>
 
       <article>
+        <a class="reload" href="" title="Reload">↻</a>
 <?php
 
 if (count($_COOKIE)) {
