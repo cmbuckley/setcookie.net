@@ -4,7 +4,7 @@ on:
     types: closed
     branches: main
 jobs:
-  deploy:
+  cleanup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
