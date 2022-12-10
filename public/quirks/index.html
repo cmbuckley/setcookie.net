@@ -25,6 +25,12 @@
         <li>IE11 on Windows 10 RS4 (April 2018)</li>
       </ul>
 
+      <h2 id="no-path-attribute">No <code>Path</code> attribute</h2>
+
+      <p>As above, <a href="https://httpwg.org/specs/rfc6265.html#sane-path">RFC 6265</a> describes how a <code>Path</code> should be interpreted. When no attribute is provided, it defaults to the “directory” of the request URI’s path, so if the request path is <a href="/foo/bar">/foo/bar</a>, the <code>Path</code> attribute defaults to <code>/foo</code>, so the cookie would be sent to <a href="/foo/baz">/foo/baz</a>.</p>
+
+      <p>However, IE again does not conform to this spec, and defaults the cookie path to the request path, meaning a cookie set on <a href="/foo/bar">/foo/bar</a> would not be sent to <a href="/foo/baz">/foo/baz</a>. Setting the <code>Path</code> explicitly solves this issue.</p>
+
       <h2 id="samesite-default-lax"><code>SameSite</code> defaulting to <code>Lax</code></h2>
 
       <p>Cookies that do not pass a <code>SameSite</code> attribute should default to <code>Lax</code> according to the <a href="https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html#name-the-samesite-attribute">draft specification</a>.</p>
@@ -37,7 +43,6 @@
 
       <p>Notably, Chrome only checks if the path is <em>implicitly</em> <code>/</code>; so setting a <code>__Host-</code> cookie without a <code>Path</code> attribute works, as long as the request URL is at the top level, such as <a href="/">setcookie.net</a> or <a href="/foo">setcookie.net/foo</a>.</p>
 
-      <p><a href="https://httpwg.org/specs/rfc6265.html#sane-path">RFC 6265</a> describes how a <code>Path</code> should be interpreted. when no attribute is provided, it defaults to the “directory” of the request URI’s path, so if the request path is <a href="/foo/bar">/foo/bar</a>, the <code>Path</code> attribute defaults to <code>/foo</code>.</p>
 
       <footer>
         <p><small>Created by <a href="https://cmbuckley.co.uk">Chris Buckley</a> for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://github.com/cmbuckley/setcookie.net">View the source here</a>.</small></p>
