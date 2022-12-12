@@ -147,12 +147,13 @@ if (isset($_POST['name'], $_POST['value'])) {
         <p>URL: <?= sprintf('http%s://%s%s', $https ? 's' : '', $host, $_SERVER['REQUEST_URI']); ?></p>
       </hgroup>
 
-      <p>Try setting cookies on the <a href="https://<?= $main; ?>">main domain</a>,
-      either explicitly, with leading dot, or with domain unspecified.
-      Then try visiting different URLs (e.g. <a href="https://a.<?= $main; ?>">a.<?= $main; ?></a>,
-      <a href="https://b.<?= $main; ?>">b.<?= $main; ?></a>,
-      <a href="https://a.b.<?= $main; ?>">a.b.<?= $main; ?></a>,
-      <a href="http://<?= $main; ?>">http instead of https</a>) and see which cookies are sent.</p>
+      <p>Use this to test various cookie options and how they impact which cookies are sent to different URLs, such as
+        <a href="https://a.<?= $main; ?>">a.<?= $main; ?></a>,
+        <a href="https://a.b.<?= $main; ?>">a.b.<?= $main; ?></a>,
+        <a href="https://<?= $main; ?>/foo"><?= $main; ?>/foo</a>, or
+        <a href="http://<?= $main; ?>">http://<?= $main; ?></a>.
+        See also some <a href="/quirks/">known browser quirks</a>.
+      </p>
 
       <article>
         <a class="reload" href="" title="Reload">↻</a>
