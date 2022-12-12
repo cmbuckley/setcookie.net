@@ -1,5 +1,9 @@
 function header(form) {
-  let header = `Set-Cookie: ${form.name.value}=${form.value.value}; path=/`;
+  let header = `Set-Cookie: ${form.name.value}=${form.value.value}`;
+
+  if (form.path.value) {
+      header += '; path=' + form.path.value;
+  }
 
   if (form.dom.value && form.dom.value != 'none') {
     form.dom.forEach(function (input) {
