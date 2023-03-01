@@ -18,7 +18,7 @@ jobs:
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v2
         with:
-          issue-number: ${{ steps.number.outputs.number }}
+          issue-number: ${{ github.event.workflow_run.pull_requests[0].number }}
           comment-id: ${{ steps.find-comment.outputs.comment-id }}
           edit-mode: replace
           body: >
