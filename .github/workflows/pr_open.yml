@@ -13,10 +13,5 @@ jobs:
           app_name="setcookie-staging-${{ github.event.pull_request.number }}"
           flyctl apps list | grep "$app_name" || flyctl apps create "$app_name"
           flyctl deploy --remote-only -a "$app_name" -e APP_ENV=staging
-          echo "${{ github.event.pull_request.number }}" > number.txt
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      - uses: actions/upload-artifact@v3
-        with:
-          name: pr-number
-          path: number.txt
