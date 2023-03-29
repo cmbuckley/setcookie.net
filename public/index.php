@@ -119,7 +119,7 @@ if (isset($_POST['name'], $_POST['value'])) {
             $warn = 'Cookies with names starting <code>__Secure-</code> must have the <code>secure</code> flag and be set via HTTPS.';
         }
         else if (preg_match('/__Host-/', $name) && (!$https || !$secure || $dom !== '' || $path !== '/')) {
-            $warn = 'Cookies with names starting <code>__Host-</code> must have the <code>secure</code> flag, be set via HTTPS, must not have a <code>domain</code> specified and must set <code>path=/</code> (but see <a href="/quirks/#no-path-attribute-host-cookies">quirks</a>).';
+            $warn = 'Cookies with names starting <code>__Host-</code> must have the <code>secure</code> flag, be set via HTTPS, must not have a <code>domain</code> specified and must set <code>path=/</code> (but see <a href="https://<?= $main; ?>/quirks/#no-path-attribute-host-cookies">quirks</a>).';
         }
 
         setcookie($name, $value, $opts);
@@ -152,7 +152,7 @@ if (isset($_POST['name'], $_POST['value'])) {
         <a href="https://a.b.<?= $main; ?>">a.b.<?= $main; ?></a>,
         <a href="https://<?= $main; ?>/foo"><?= $main; ?>/foo</a>, or
         <a href="http://<?= $main; ?>">http://<?= $main; ?></a>.
-        See also some <a href="/quirks/">known browser quirks</a>.
+        See also some <a href="https://<?= $main; ?>/quirks/">known browser quirks</a>.
       </p>
 
       <article>
@@ -210,7 +210,7 @@ if (isset($_POST['name'], $_POST['value'])) {
         <label><input type="radio" name="dom" value="<?= $domain ?>" /><?= $domain; ?></label>
         <?php endforeach; ?>
         <label><input type="radio" name="dom" value="none" checked />(unspecified)</label>
-        <small>(see <a href="/quirks/#no-domain-attribute">quirks</a> about unspecified domain)</small>
+        <small>(see <a href="https://<?= $main; ?>/quirks/#no-domain-attribute">quirks</a> about unspecified domain)</small>
         </p>
 
         <p>SameSite:
@@ -220,7 +220,7 @@ if (isset($_POST['name'], $_POST['value'])) {
         <label><input type="radio" name="ss" value="lax" />Lax</label>
         <label><input type="radio" name="ss" value="strict" />Strict</label>
         <label><input type="radio" name="ss" value="notset" checked />(not set)</label>
-        <small>(<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#cookies_without_samesite_default_to_samesitelax">behaves like Lax</a> in most browsers, but see <a href="/quirks/#samesite-default-lax">exceptions</a>)</small>
+        <small>(<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#cookies_without_samesite_default_to_samesitelax">behaves like Lax</a> in most browsers, but see <a href="https://<?= $main; ?>/quirks/#samesite-default-lax">exceptions</a>)</small>
         </p>
 
         <?php if ($https): ?>
