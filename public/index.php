@@ -1,55 +1,18 @@
 <?php
 
-$main = (getenv('APP_ENV') == 'production' || !getenv('FLY_APP_NAME') ? 'setcookie.net' : getenv('FLY_APP_NAME') . '.fly.dev');
-$host = $_SERVER['HTTP_HOST'];
-$https = (isset($_SERVER['HTTP_X_FORWARDED_SSL']) ? $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
+include $_SERVER['DOCUMENT_ROOT'] . '/../src/app.php';
+
+$app = new App;
+$main = $app->getMainHost();
+$host = $app->getHost();
+$https = $app->isHttps();
+
 $name = $value = '';
 $path = '/';
-
-// output domains that we can set this cookie on
-function domains($host, $main) {
-    $domains = [".$main", $main];
-
-    if ($host != $main && str_ends_with($host, $main)) {
-        $subs = substr($host, 0, strpos($host, $main) - 1);
-        $curr = ".$main";
-
-        foreach (array_slice(array_reverse(explode('.', $subs)), 0, 2) as $sub) {
-            array_unshift($domains, ".$sub$curr", "$sub$curr");
-            $curr = ".$sub$curr";
-        }
-    }
-
-    return $domains;
-}
 
 function samesite() {
     $ss = (isset($_POST['ss']) ? $_POST['ss'] : 'notset');
     if (in_array($ss, ['none', 'lax', 'strict'])) { return ucfirst($ss); }
-}
-
-function sentheader() {
-    return current(array_filter(headers_list(), function ($h) {
-        return stripos($h, 'Set-Cookie') !== false;
-    }));
-}
-
-// check if a cookie-path path-matches a request-path
-// https://httpwg.org/specs/rfc6265.html#cookie-path
-function pathmatch($requestPath, $cookiePath) {
-    if ($cookiePath === '' || $cookiePath === $requestPath) {
-        return true;
-    }
-
-    // cookie-path is a prefix or the request-path, and either cookie-path ends with a "/",
-    // or the first character not included in cookie-path is a "/"
-    if (str_starts_with($requestPath, $cookiePath) &&
-        (substr($cookiePath, -1) == '/' || substr($requestPath, strlen($cookiePath), 1) == '/')
-    ) {
-        return true;
-    }
-
-    return false;
 }
 
 // make sure it's using the main URL
@@ -86,7 +49,7 @@ if (isset($_POST['name'], $_POST['value'])) {
 
         if (!isset($_POST['dom']) || $_POST['dom'] == 'none') {
             $dom = '';
-        } elseif (in_array($_POST['dom'], domains($host, $main))) {
+        } elseif (in_array($_POST['dom'], $app->getDomains())) {
             $dom = $_POST['dom'];
         } else {
             $dom = $host;
@@ -103,7 +66,7 @@ if (isset($_POST['name'], $_POST['value'])) {
         if ($path != '' && substr($path, 0, 1) !== '/') {
             $warn = 'Paths without a leading / are treated as if no attribute was provided.';
         }
-        elseif (!pathmatch($_SERVER['REQUEST_URI'], $path)) {
+        elseif (!$app->pathMatch($path)) {
             $warn = 'Cookies can be set on non-matching paths, but it would not be sent for a request to this path.';
         }
 
@@ -123,7 +86,7 @@ if (isset($_POST['name'], $_POST['value'])) {
         }
 
         setcookie($name, $value, $opts);
-        $message = 'Sent header: <code>' . sentheader() . '</code>';
+        $message = 'Sent header: <code>' . $app->getSentHeader() . '</code>';
     } catch (Exception $ex) {
         $error = $ex->getMessage();
     }
@@ -144,7 +107,7 @@ if (isset($_POST['name'], $_POST['value'])) {
     <main class="container">
       <hgroup>
         <h1>Cookie Test</h1>
-        <p>URL: <?= sprintf('http%s://%s%s', $https ? 's' : '', $host, $_SERVER['REQUEST_URI']); ?></p>
+        <p>URL: <?= $app->getUrl(); ?></p>
       </hgroup>
 
       <p>Use this to test various cookie options and how they impact which cookies are sent to different URLs, such as
@@ -206,7 +169,7 @@ if (isset($_POST['name'], $_POST['value'])) {
         <small>(alphanumeric or <code>/_-</code>)</small>
 
         <p>Cookie domain:
-        <?php foreach (domains($host, $main) as $domain): ?>
+        <?php foreach ($app->getDomains() as $domain): ?>
         <label><input type="radio" name="dom" value="<?= $domain ?>" /><?= $domain; ?></label>
         <?php endforeach; ?>
         <label><input type="radio" name="dom" value="none" checked />(unspecified)</label>

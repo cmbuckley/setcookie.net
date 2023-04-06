@@ -1,10 +1,19 @@
+<?php
+
+include $_SERVER['DOCUMENT_ROOT'] . '/../src/app.php';
+
+$app = new App;
+$app->mainIsCanonical();
+$main = $app->getMainHost();
+
+?>
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Cookie Quirks - Test site to demo setting cookies.">
-    <link rel="canonical" href="https://setcookie.net/quirks/" />
+    <link rel="canonical" href="https://<?= $main; ?>/quirks/" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/picocss/1.5.6/pico.min.css" />
     <link rel="stylesheet" href="/css/main.css" />
     <title>Cookie Quirks</title>
@@ -17,7 +26,7 @@
 
       <h2 id="no-domain-attribute">No <code>Domain</code> attribute</h2>
 
-      <p>According to <a href="https://httpwg.org/specs/rfc6265.html#storage-model">RFC 6265</a>, if a <code>Domain</code> is not specified, a cookie should be treated as host-only, which means that a cookie set with no <code>Domain</code> attribute on <a href="/">setcookie.net</a> is not valid for <a href="https://www.setcookie.net">www.setcookie.net</a>.</p>
+      <p>According to <a href="https://httpwg.org/specs/rfc6265.html#storage-model">RFC 6265</a>, if a <code>Domain</code> is not specified, a cookie should be treated as host-only, which means that a cookie set with no <code>Domain</code> attribute on <a href="/"><?= $main; ?></a> is not valid for <a href="https://www.<?= $main; ?>">www.<?= $main; ?></a>.</p>
 
       <p>However, IE and older versions of Edge <a href="https://learn.microsoft.com/en-gb/archive/blogs/ieinternals/internet-explorer-cookie-internals-faq">chose not to support this specification</a> until recently, and cookies without a <code>Domain</code> attribute would still be sent to subdomains. This was fixed in the following versions:</p>
 
@@ -42,7 +51,7 @@
 
       <p>The <a href="https://datatracker.ietf.org/doc/html/draft-west-cookie-prefixes-05#section-3-2">Cookie Prefixes draft specification</a> states that cookies that begin with <code>__Host-</code> <q>MUST contain a <code>Path</code> attribute with a value of <code>/</code>.</p>
 
-      <p>Notably, Chrome only checks if the path is <em>implicitly</em> <code>/</code>; so setting a <code>__Host-</code> cookie without a <code>Path</code> attribute works, as long as the request URL is at the top level, such as <a href="/">setcookie.net</a> or <a href="/foo">setcookie.net/foo</a>.</p>
+      <p>Notably, Chrome only checks if the path is <em>implicitly</em> <code>/</code>; so setting a <code>__Host-</code> cookie without a <code>Path</code> attribute works, as long as the request URL is at the top level, such as <a href="/"><?= $main; ?></a> or <a href="/foo"><?= $main; ?>/foo</a>.</p>
 
 
       <footer>
