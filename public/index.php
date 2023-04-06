@@ -3,9 +3,9 @@
 include $_SERVER['DOCUMENT_ROOT'] . '/../src/app.php';
 
 $app = new App;
-$main = $app->getMain();
+$main = $app->getMainHost();
+$host = $app->getHost();
 $https = $app->isHttps();
-$host = $_SERVER['HTTP_HOST'];
 
 $name = $value = '';
 $path = '/';
@@ -66,7 +66,7 @@ if (isset($_POST['name'], $_POST['value'])) {
         if ($path != '' && substr($path, 0, 1) !== '/') {
             $warn = 'Paths without a leading / are treated as if no attribute was provided.';
         }
-        elseif (!$app->pathMatch($_SERVER['REQUEST_URI'], $path)) {
+        elseif (!$app->pathMatch($path)) {
             $warn = 'Cookies can be set on non-matching paths, but it would not be sent for a request to this path.';
         }
 
@@ -107,7 +107,7 @@ if (isset($_POST['name'], $_POST['value'])) {
     <main class="container">
       <hgroup>
         <h1>Cookie Test</h1>
-        <p>URL: <?= sprintf('http%s://%s%s', $https ? 's' : '', $host, $_SERVER['REQUEST_URI']); ?></p>
+        <p>URL: <?= $app->getUrl(); ?></p>
       </hgroup>
 
       <p>Use this to test various cookie options and how they impact which cookies are sent to different URLs, such as

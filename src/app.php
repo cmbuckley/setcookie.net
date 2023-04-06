@@ -23,9 +23,24 @@ class App {
         }
     }
 
+    // get current domain
+    public function getHost() {
+        return $this->server['HTTP_HOST'];
+    }
+
     // get top-level domain
-    public function getMain() {
+    public function getMainHost() {
         return $this->main;
+    }
+
+    // get the requested URL
+    public function getUrl() {
+        return sprintf(
+            'http%s://%s%s',
+            $this->isHttps() ? 's' : '',
+            $this->getHost(),
+            $this->server['REQUEST_URI']
+        );
     }
 
     // if the request is via https
@@ -62,7 +77,9 @@ class App {
 
     // check if a cookie-path path-matches a request-path
     // https://httpwg.org/specs/rfc6265.html#cookie-path
-    function pathMatch($requestPath, $cookiePath) {
+    function pathMatch($cookiePath) {
+        $requestPath = $this->server['REQUEST_URI'];
+
         if ($cookiePath === '' || $cookiePath === $requestPath) {
             return true;
         }

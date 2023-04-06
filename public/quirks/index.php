@@ -4,7 +4,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/../src/app.php';
 
 $app = new App;
 $app->mainIsCanonical();
-$main = $app->getMain();
+$main = $app->getMainHost();
 
 ?>
 <!doctype html>
