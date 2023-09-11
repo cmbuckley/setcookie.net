@@ -48,3 +48,7 @@ article > :last-child {
 .warning::before {
   content: '⚠️ ';
 }
+
+.hidden {
+  display: none;
+}

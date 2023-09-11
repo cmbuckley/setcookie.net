@@ -97,6 +97,23 @@ class App {
         return false;
     }
 
+    public function expires() {
+        // no expiry
+        if ($this->data['expires'] !== 'on') {
+            return 0;
+        }
+
+        $date = new DateTime($this->data['expdate']);
+        $now = new DateTime();
+
+        // invalid date
+        if ($date > $now) {
+            return $date->getTimestamp();
+        }
+
+        return false;
+    }
+
     public function samesite() {
         $ss = (isset($this->data['ss']) ? $this->data['ss'] : 'notset');
 
