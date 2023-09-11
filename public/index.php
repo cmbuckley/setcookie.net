@@ -2,18 +2,13 @@
 
 include $_SERVER['DOCUMENT_ROOT'] . '/../src/app.php';
 
-$app = new App;
+$app = new App($_POST);;
 $main = $app->getMainHost();
 $host = $app->getHost();
 $https = $app->isHttps();
 
 $name = $value = '';
 $path = '/';
-
-function samesite() {
-    $ss = (isset($_POST['ss']) ? $_POST['ss'] : 'notset');
-    if (in_array($ss, ['none', 'lax', 'strict'])) { return ucfirst($ss); }
-}
 
 // make sure it's using the main URL
 if (getenv('APP_ENV') == 'production' && getenv('FLY_APP_NAME') && strpos($host, $main) === false) {
@@ -32,7 +27,7 @@ if (isset($_POST['name'], $_POST['value'])) {
     $path = preg_replace('/[^a-z\d\/_-]/i', '', $rawPath);
     $secure = (isset($_POST['sec']) && $_POST['sec'] === 'on');
     $httpOnly = (isset($_POST['httponly']) && $_POST['httponly'] === 'on');
-    $samesite = samesite();
+    $samesite = $app->samesite();
 
     try {
         if (empty($name) || empty($value)) {

@@ -2,9 +2,11 @@
 
 class App {
     protected $main = 'setcookie.net';
+    protected $data;
     protected $server;
 
-    public function __construct() {
+    public function __construct($data) {
+        $this->data = $data;
         $this->server = $_SERVER;
 
         // pre-prod Fly app domain
@@ -77,7 +79,7 @@ class App {
 
     // check if a cookie-path path-matches a request-path
     // https://httpwg.org/specs/rfc6265.html#cookie-path
-    function pathMatch($cookiePath) {
+    public function pathMatch($cookiePath) {
         $requestPath = $this->server['REQUEST_URI'];
 
         if ($cookiePath === '' || $cookiePath === $requestPath) {
@@ -93,5 +95,13 @@ class App {
         }
 
         return false;
+    }
+
+    public function samesite() {
+        $ss = (isset($this->data['ss']) ? $this->data['ss'] : 'notset');
+
+        if (in_array($ss, ['none', 'lax', 'strict'])) {
+            return ucfirst($ss);
+        }
     }
 }
