@@ -50,6 +50,9 @@ document.querySelector('form').addEventListener('input', function (e) {
   }
 
   this.querySelector('samp').innerText = header(this);
+  this.tz.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  // gets ISO format of local datetime
+  this.expdate.setAttribute('min', new Date().toLocaleString('sv').substr(0, 16).replace(' ', 'T'));
 });
 
 let cookieBox = document.querySelector('article');

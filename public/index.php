@@ -189,6 +189,7 @@ if (isset($_POST['name'], $_POST['value'])) {
         <p>
             <label>Set expiry date: <input type="checkbox" name="expires" /></label>
             <label class="hidden"><span class="hidden">Expiry date:</span> <input type="datetime-local" name="expdate" /></label>
+            <input type="hidden" name="tz" />
         </p>
 
         <?php if ($https): ?>

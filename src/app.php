@@ -103,8 +103,9 @@ class App {
             return 0;
         }
 
-        $date = new DateTime($this->data['expdate']);
-        $now = new DateTime();
+        $timezone = (empty($this->data['tz']) ? null : new DateTimeZone($this->data['tz']));
+        $date = new DateTime($this->data['expdate'], $timezone);
+        $now = new DateTime('now', $timezone);
 
         // invalid date
         if ($date > $now) {
