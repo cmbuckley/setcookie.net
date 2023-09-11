@@ -149,18 +149,18 @@ if (isset($_POST['name'], $_POST['value'])) {
         <div class="grid">
           <label for="name">
             Cookie name
-            <input name="name" id="name" required pattern="[A-Za-z0-9_-]+" value="<?= $name; ?>" />
+            <input name="name" id="name" required pattern="[A-Za-z0-9_\-]+" value="<?= $name; ?>" />
           </label>
 
           <label for="value">
             Cookie value
-            <input name="value" id="value" required pattern="[A-Za-z0-9_-]+" value="<?= $value ?>" />
+            <input name="value" id="value" required pattern="[A-Za-z0-9_\-]+" value="<?= $value ?>" />
           </label>
         </div>
         <small>(alphanumeric or <code>_-</code>; restricted character set compared to <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#attributes">spec</a>)</small>
 
         <label for="path">Path</label>
-        <input name="path" id="path" pattern="[A-Za-z0-9/_-]+" value="<?= $path; ?>" />
+        <input name="path" id="path" pattern="[A-Za-z0-9\/_\-]+" value="<?= $path; ?>" />
         <small>(alphanumeric or <code>/_-</code>)</small>
 
         <p>Cookie domain:
