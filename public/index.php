@@ -27,6 +27,7 @@ if (isset($_POST['name'], $_POST['value'])) {
     $path = preg_replace('/[^a-z\d\/_-]/i', '', $rawPath);
     $secure = (isset($_POST['sec']) && $_POST['sec'] === 'on');
     $httpOnly = (isset($_POST['httponly']) && $_POST['httponly'] === 'on');
+    $expires = $app->expires();
     $samesite = $app->samesite();
 
     try {
@@ -50,8 +51,12 @@ if (isset($_POST['name'], $_POST['value'])) {
             $dom = $host;
         }
 
+        if ($expires === false) {
+            throw new Exception('expiry date must be in the future.');
+        }
+
         $opts = [
-            'expires'  => 0,
+            'expires'  => $expires,
             'path'     => $path,
             'domain'   => $dom,
             'secure'   => $secure,
@@ -179,6 +184,11 @@ if (isset($_POST['name'], $_POST['value'])) {
         <label><input type="radio" name="ss" value="strict" />Strict</label>
         <label><input type="radio" name="ss" value="notset" checked />(not set)</label>
         <small>(<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#cookies_without_samesite_default_to_samesitelax">behaves like Lax</a> in most browsers, but see <a href="https://<?= $main; ?>/quirks/#samesite-default-lax">exceptions</a>)</small>
+        </p>
+
+        <p>
+            <label>Set expiry date: <input type="checkbox" name="expires" /></label>
+            <label class="hidden"><span class="hidden">Expiry date:</span> <input type="datetime-local" name="expdate" /></label>
         </p>
 
         <?php if ($https): ?>

@@ -1,5 +1,15 @@
 function header(form) {
+  if (!form.name.value || !form.value.value) {
+    return '';
+  }
+
   let header = `Set-Cookie: ${form.name.value}=${form.value.value}`;
+
+  if (form.expires.checked) {
+      if (!form.expdate.value) { return ''; }
+      let date = new Date(form.expdate.value);
+      header += '; expires=' + date.toUTCString();
+  }
 
   if (form.path.value) {
       header += '; path=' + form.path.value;
@@ -32,10 +42,14 @@ function header(form) {
   return header;
 }
 
-document.querySelector('form').addEventListener('input', function () {
-  if (this.name.value && this.value.value) {
-    this.querySelector('samp').innerText = header(this);
+document.querySelector('form').addEventListener('input', function (e) {
+  if (e.target.name == 'expires') {
+    // better than toggle when navigating in history
+    this.expdate.parentNode.classList[e.target.checked ? 'remove' : 'add']('hidden');
+    this.expdate.required = e.target.checked;
   }
+
+  this.querySelector('samp').innerText = header(this);
 });
 
 let cookieBox = document.querySelector('article');
