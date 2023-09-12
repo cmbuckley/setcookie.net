@@ -99,7 +99,7 @@ class App {
 
     public function expires() {
         // no expiry
-        if ($this->data['expires'] !== 'on') {
+        if (!isset($this->data['expires']) || $this->data['expires'] !== 'on') {
             return 0;
         }
 
