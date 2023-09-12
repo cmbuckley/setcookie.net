@@ -45,7 +45,7 @@ $main = $app->getMainHost();
 
       <p>Cookies that do not pass a <code>SameSite</code> attribute should default to <code>Lax</code> according to the <a href="https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html#name-the-samesite-attribute">draft specification</a>.</p>
 
-      <p>However, Firefox and Safari <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#browser_compatibility">do not follow this behaviour</a>. It is advised to explicitly set this attribute for the most compatible experience.</p>
+      <p>However, Firefox and Safari <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#browser_compatibility">do not follow this behaviour</a>. It is advised to explicitly set this attribute for the most compatible experience.</p>
 
       <h2 id="no-path-attribute-host-cookies">No <code>Path</code> attribute for <code>__Host-</code> cookies</h2>
 
