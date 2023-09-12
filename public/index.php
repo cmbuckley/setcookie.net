@@ -2,7 +2,7 @@
 
 include $_SERVER['DOCUMENT_ROOT'] . '/../src/app.php';
 
-$app = new App($_POST);;
+$app = new App($_POST);
 $main = $app->getMainHost();
 $host = $app->getHost();
 $https = $app->isHttps();
