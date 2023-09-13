@@ -4,6 +4,7 @@ class App {
     protected $main = 'setcookie.net';
     protected $data;
     protected $server;
+    protected $assets = [];
 
     public function __construct(array $data = []) {
         $this->data = $data;
@@ -12,6 +13,15 @@ class App {
         // pre-prod Fly app domain
         if (getenv('APP_ENV') != 'production' && getenv('FLY_APP_NAME')) {
             $this->main = getenv('FLY_APP_NAME') . '.fly.dev';
+        }
+
+        // asset map
+        $map = getenv('ASSET_MAP');
+        if (!empty($map) && file_exists($map)) {
+            foreach (file($map) as $line) {
+                $row = str_getcsv($line);
+                $this->assets[$row[0]] = $row[1];
+            }
         }
     }
 
@@ -23,6 +33,10 @@ class App {
             header("Location: https://{$this->main}$path/");
             exit;
         }
+    }
+
+    public function asset($src) {
+        return isset($this->assets[$src]) ? $this->assets[$src] : $src;
     }
 
     // get current domain

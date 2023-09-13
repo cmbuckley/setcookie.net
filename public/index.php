@@ -100,7 +100,7 @@ if (isset($_POST['name'], $_POST['value'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Test site to demo setting cookies.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/picocss/1.5.6/pico.min.css" />
-    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="<?= $app->asset('/css/main.css'); ?>" />
     <title>Cookie Test</title>
   </head>
   <body>
@@ -206,6 +206,6 @@ if (isset($_POST['name'], $_POST['value'])) {
         <p><small>Created by <a href="https://cmbuckley.co.uk">Chris Buckley</a> for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://github.com/cmbuckley/setcookie.net">View the source here</a>.</small></p>
       </footer>
     </main>
-    <script src="/js/main.js"></script>
+    <script src="<?= $app->asset('/js/main.js'); ?>"></script>
   </body>
 </html>

@@ -1,7 +1,11 @@
 app = "setcookie"
 
+[deploy]
+  release_command="/config/assets.sh /var/www/html"
+
 [env]
   APP_ENV = "production"
+  ASSET_MAP = "/config/assets.map"
 
 [[services]]
   internal_port = 80

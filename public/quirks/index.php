@@ -15,7 +15,7 @@ $main = $app->getMainHost();
     <meta name="description" content="Cookie Quirks - Test site to demo setting cookies.">
     <link rel="canonical" href="https://<?= $main; ?>/quirks/" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/picocss/1.5.6/pico.min.css" />
-    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="<?= $app->asset('/css/main.css'); ?>" />
     <title>Cookie Quirks</title>
   </head>
   <body>
