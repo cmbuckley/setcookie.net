@@ -4,3 +4,7 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule .* /index.php [L]
+
+<FilesMatch "\.[0-9a-f]{32}\.(css|js)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
