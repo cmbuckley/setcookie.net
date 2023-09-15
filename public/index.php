@@ -106,7 +106,7 @@ if (isset($_POST['name'], $_POST['value'])) {
   <body>
     <main class="container">
       <hgroup>
-        <h1>Cookie Test</h1>
+        <h1>Hello World</h1>
         <p>URL: <?= $app->getUrl(); ?></p>
       </hgroup>
 
