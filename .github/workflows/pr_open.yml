@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - name: Deploy preview app
+      - name: "Deploy preview app #${{ github.event.pull_request.number }}"
         run: |
           app_name="setcookie-staging-${{ github.event.pull_request.number }}"
           flyctl apps list | grep "$app_name" || flyctl apps create "$app_name"

@@ -8,18 +8,25 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+      - name: Find PR number
+        id: number
+        run: |
+          number=$(curl -s ${{ github.event.workflow_run.jobs_url }} |
+            jq -r '.jobs[0].steps[] | select(.name | contains("Deploy preview")) | .name' |
+            sed 's/^.*#//')
+          echo "number=$number" >> $GITHUB_OUTPUT
       - name: Find Comment
         uses: peter-evans/find-comment@v2
         id: find-comment
         with:
-          issue-number: ${{ github.event.workflow_run.pull_requests[0].number }}
+          issue-number: ${{ steps.number.outputs.number }}
           comment-author: 'github-actions[bot]'
           body-includes: Your deploy preview
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v2
         with:
-          issue-number: ${{ github.event.workflow_run.pull_requests[0].number }}
+          issue-number: ${{ steps.number.outputs.number }}
           comment-id: ${{ steps.find-comment.outputs.comment-id }}
           edit-mode: replace
           body: >
-            Your deploy preview can be found at https://setcookie-staging-${{ github.event.workflow_run.pull_requests[0].number }}.fly.dev.
+            Your deploy preview can be found at https://setcookie-staging-${{ steps.number.outputs.number }}.fly.dev.
