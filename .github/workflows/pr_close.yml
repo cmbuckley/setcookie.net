@@ -1,16 +1,15 @@
 name: Close Pull Request
 on:
-  pull_request:
+  pull_request_target:
     types: closed
     branches: main
 jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Destroy preview app
         run: |
-          flyctl apps destroy -y "setcookie-staging-${{ github.event.pull_request.number }}"
+          flyctl apps destroy -y "setcookie-staging-${{ github.event.number }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
