@@ -1,4 +1,7 @@
-name: Add Deploy Preview Comment
+# Warning: This has access to secrets and checks out untrusted code. Modify with caution
+# This uses pull_request/workflow_run instead of pull_request_target so it needs to be approved
+
+name: Create Deploy Preview
 on:
   workflow_run:
     workflows: New Pull Request
@@ -12,9 +15,20 @@ jobs:
         id: number
         run: |
           number=$(curl -s ${{ github.event.workflow_run.jobs_url }} |
-            jq -r '.jobs[0].steps[] | select(.name | contains("Deploy preview")) | .name' |
-            sed 's/^.*#//')
+            jq -r '.jobs[0].steps[0].name')
           echo "number=$number" >> $GITHUB_OUTPUT
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_branch }}
+      - uses: superfly/flyctl-actions/setup-flyctl@v1
+      - name: Deploy preview app
+        run: |
+          app_name="setcookie-staging-${{ steps.number.outputs.number }}"
+          flyctl apps list | grep "$app_name" || flyctl apps create "$app_name"
+          flyctl deploy --remote-only -a "$app_name" -e APP_ENV=staging
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       - name: Find Comment
         uses: peter-evans/find-comment@v2
         id: find-comment
