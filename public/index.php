@@ -99,7 +99,7 @@ if (isset($_POST['name'], $_POST['value'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Test site to demo setting cookies.">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/picocss/1.5.6/pico.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/picocss/1.5.7/pico.min.css" />
     <link rel="stylesheet" href="<?= $app->asset('/css/main.css'); ?>" />
     <title>Cookie Test</title>
   </head>
