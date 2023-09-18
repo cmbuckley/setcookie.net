@@ -47,13 +47,6 @@ $main = $app->getMainHost();
 
       <p>However, Firefox and Safari <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#browser_compatibility">do not follow this behaviour</a>. It is advised to explicitly set this attribute for the most compatible experience.</p>
 
-      <h2 id="no-path-attribute-host-cookies">No <code>Path</code> attribute for <code>__Host-</code> cookies</h2>
-
-      <p>The <a href="https://datatracker.ietf.org/doc/html/draft-west-cookie-prefixes-05#section-3.2">Cookie Prefixes draft specification</a> states that cookies that begin with <code>__Host-</code> <q>MUST contain a <code>Path</code> attribute with a value of <code>/</code>.</p>
-
-      <p>Notably, Chrome only checks if the path is <em>implicitly</em> <code>/</code>; so setting a <code>__Host-</code> cookie without a <code>Path</code> attribute works, as long as the request URL is at the top level, such as <a href="/"><?= $main; ?></a> or <a href="/foo"><?= $main; ?>/foo</a>.</p>
-
-
       <footer>
         <p><small>Created by <a href="https://cmbuckley.co.uk">Chris Buckley</a> for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://github.com/cmbuckley/setcookie.net">View the source here</a>.</small></p>
       </footer>

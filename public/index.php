@@ -82,7 +82,7 @@ if (isset($_POST['name'], $_POST['value'])) {
             $warn = 'Cookies with names starting <code>__Secure-</code> must have the <code>secure</code> flag and be set via HTTPS.';
         }
         else if (preg_match('/__Host-/', $name) && (!$https || !$secure || $dom !== '' || $path !== '/')) {
-            $warn = 'Cookies with names starting <code>__Host-</code> must have the <code>secure</code> flag, be set via HTTPS, must not have a <code>domain</code> specified and must set <code>path=/</code> (but see <a href="https://<?= $main; ?>/quirks/#no-path-attribute-host-cookies">quirks</a>).';
+            $warn = 'Cookies with names starting <code>__Host-</code> must have the <code>secure</code> flag, be set via HTTPS, must not have a <code>domain</code> specified and must set <code>path=/</code>.';
         }
 
         setcookie($name, $value, $opts);
