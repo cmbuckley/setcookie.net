@@ -25,6 +25,11 @@ article > :last-child {
   margin-bottom: 0;
 }
 
+footer {
+  border-top: 1px solid var(--muted-border-color);
+  padding-top: var(--nav-element-spacing-vertical);
+}
+
 .success {
   color: green;
 }
