@@ -44,6 +44,12 @@ hgroup i {
   color: purple;
 }
 
+.url:has(+ i .scheme:hover) .scheme,
+.url:has(+ i .subs:hover) .subs,
+.url:has(+ i .path:hover) .path {
+  text-decoration: underline;
+}
+
 .path {
   color: dodgerblue;
 }

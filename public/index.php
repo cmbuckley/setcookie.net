@@ -98,7 +98,7 @@ function displayUrl($url, $main) {
 
     // the main URL
     $formatted = sprintf(
-        '<span class="%1$s">%1$s://</span><span class="subs">%2$s</span>%3$s<span class="path">%4$s</span>',
+        '<span class="scheme %1$s">%1$s://</span><span class="subs">%2$s</span>%3$s<span class="path">%4$s</span>',
         $parts['scheme'],
         $subdomains,
         $main,
@@ -106,7 +106,7 @@ function displayUrl($url, $main) {
     );
 
     // supplementary info
-    $facts = [sprintf('<span class="%s">%s</span>', $parts['scheme'], strtoupper($parts['scheme']))];
+    $facts = [sprintf('<span class="scheme %s">%s</span>', $parts['scheme'], strtoupper($parts['scheme']))];
     if ($subdomains != '') { $facts[] = '<span class="subs">subdomains</span>'; }
     if ($parts['path'] != '/') { $facts[] = '<span class="path">path</span>'; }
 
