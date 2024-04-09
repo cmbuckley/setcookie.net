@@ -30,15 +30,33 @@ footer {
   padding-top: var(--nav-element-spacing-vertical);
 }
 
-.success {
+hgroup i {
+  display: block;
+}
+
+@media (min-width: 576px) {
+  hgroup i {
+    display: inline;
+  }
+}
+
+.url {
+  color: purple;
+}
+
+.path {
+  color: dodgerblue;
+}
+
+.success, .https {
   color: green;
 }
 
-.error {
+.error, .http {
   color: red;
 }
 
-.warning {
+.warning, .subs {
   color: orange;
 }
 

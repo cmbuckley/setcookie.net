@@ -92,6 +92,27 @@ if (isset($_POST['name'], $_POST['value'])) {
     }
 }
 
+function displayUrl($url, $main) {
+    $parts = parse_url($url);
+    $subdomains = preg_replace('/' . preg_quote($main, '/') . '$/', '', $parts['host']);
+
+    // the main URL
+    $formatted = sprintf(
+        '<span class="%1$s">%1$s://</span><span class="subs">%2$s</span>%3$s<span class="path">%4$s</span>',
+        $parts['scheme'],
+        $subdomains,
+        $main,
+        htmlentities($parts['path'])
+    );
+
+    // supplementary info
+    $facts = [sprintf('<span class="%s">%s</span>', $parts['scheme'], strtoupper($parts['scheme']))];
+    if ($subdomains != '') { $facts[] = '<span class="subs">subdomains</span>'; }
+    if ($parts['path'] != '/') { $facts[] = '<span class="path">path</span>'; }
+
+    return '<b class="url">' . $formatted . '</b> <i>(' . implode(', ', $facts) . ')</i>';
+}
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -107,14 +128,15 @@ if (isset($_POST['name'], $_POST['value'])) {
     <main class="container">
       <hgroup>
         <h1>Cookie Test</h1>
-        <p>URL: <?= $app->getUrl(); ?></p>
+        <p>URL: <?= displayUrl($app->getUrl(), $main); ?></p>
       </hgroup>
 
-      <p>Use this to test various cookie options and how they impact which cookies are sent to different URLs, such as
-        <a href="https://a.<?= $main; ?>">a.<?= $main; ?></a>,
-        <a href="https://a.b.<?= $main; ?>">a.b.<?= $main; ?></a>,
-        <a href="https://<?= $main; ?>/foo"><?= $main; ?>/foo</a>, or
-        <a href="http://<?= $main; ?>">http://<?= $main; ?></a>.
+      <p>You can test various cookie options below and how they affect which cookies are sent to different URLs, such as
+        <a href="https://a.<?= $main; ?>"><b class="subs">a.</b><?= $main; ?></a>,
+        <a href="https://a.b.<?= $main; ?>"><b class="subs">a.b.</b><?= $main; ?></a>,
+        <a href="https://<?= $main; ?>/foo"><?= $main; ?><b class="path">/foo</b></a>,
+        <a href="https://<?= $main; ?>"><b class="https">https://</b><?= $main; ?></a>, or
+        <a href="http://<?= $main; ?>"><b class="http">http://</b><?= $main; ?></a>.
         See also some <a href="https://<?= $main; ?>/quirks/">known browser quirks</a>.
       </p>
 
