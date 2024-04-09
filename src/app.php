@@ -41,7 +41,10 @@ class App {
 
     // get current domain
     public function getHost() {
-        return $this->server['HTTP_HOST'];
+        return filter_var($this->server['HTTP_X_FORWARDED_HOST'] ?? '', FILTER_VALIDATE_DOMAIN, [
+            'options' => ['default' => $this->server['HTTP_HOST']],
+            'flags'   => FILTER_FLAG_HOSTNAME,
+        ]);
     }
 
     // get top-level domain
