@@ -16,5 +16,5 @@ find "$public" -regextype posix-extended -regex ".*\.$glob" -printf "/%P\n" | wh
     fingerprint="${asset%.*}.$md5.${asset##*.}"
 
     cp "$public$asset" "$public${asset%.*}.$md5.${asset##*.}"
-    echo "$asset,$fingerprint" >> "$map"
+    echo "$asset:$fingerprint" >> "$map"
 done
