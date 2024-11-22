@@ -19,7 +19,7 @@ class App {
         $map = getenv('ASSET_MAP');
         if (!empty($map) && file_exists($map)) {
             foreach (file($map) as $line) {
-                $row = str_getcsv($line);
+                $row = explode(':', $line, 2);
                 $this->assets[$row[0]] = $row[1];
             }
         }
