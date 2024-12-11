@@ -42,6 +42,13 @@ function header(form) {
   return header;
 }
 
+// set a hidden cookie with link protocol
+document.querySelectorAll('a.self').forEach(a => a.addEventListener('click', function (e) {
+  e.preventDefault(); // ensure the cookie gets set
+  document.cookie = '!proto=' + new URL(e.target.href).protocol;
+  window.location = e.target.href;
+}));
+
 document.querySelector('form').addEventListener('input', function (e) {
   if (e.target.name == 'expires') {
     // better than toggle when navigating in history

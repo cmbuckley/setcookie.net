@@ -73,3 +73,8 @@ hgroup i {
 .hidden {
   display: none;
 }
+
+.proto {
+  display: block;
+  font-style: italic;
+}

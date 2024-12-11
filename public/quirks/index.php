@@ -51,7 +51,7 @@ $main = $app->getMainHost();
         <p><small>Created by <a href="https://cmbuckley.co.uk">Chris Buckley</a> for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://github.com/cmbuckley/setcookie.net">View the source here</a>.</small></p>
       </footer>
     </main>
-    <script src="/js/main.js"></script>
+    <script src="<?= $app->asset('/js/main.js'); ?>"></script>
   </body>
 </html>
 
