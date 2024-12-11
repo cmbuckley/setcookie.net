@@ -144,11 +144,11 @@ function displayUrl($url, $main) {
         <a class="reload" href="" title="Reload">↻</a>
 <?php
 
-if (count($_COOKIE)) {
+if (count($_COOKIE) && count(array_filter(array_keys($_COOKIE), fn($k) => $k[0] != '!'))) {
     echo "<p>Received cookies:</p><ul>\n";
 
     foreach ($_COOKIE as $n => $v) {
-        echo "<li><code>$n = $v</code></li>\n";
+        if ($n[0] != '!') { echo "<li><code>$n = $v</code></li>\n"; }
     }
 
     echo "</ul>\n\n";

@@ -64,12 +64,14 @@ if (document.cookie) {
   let ul = document.createElement('ul');
   cookieBox.appendChild(ul);
 
-  for (let cookie of new URLSearchParams(document.cookie.replace(/; /g, '&'))) {
+  for (let [name, value] of new URLSearchParams(document.cookie.replace(/; /g, '&'))) {
       let code = document.createElement('code');
-      code.innerText = cookie[0] + ' = ' + cookie[1];
+      code.innerText = name + ' = ' + value;
 
-      let li = document.createElement('li');
-      li.appendChild(code);
-      ul.appendChild(li);
+      if (name[0] != '!') {
+          let li = document.createElement('li');
+          li.appendChild(code);
+          ul.appendChild(li);
+      }
   }
 }
