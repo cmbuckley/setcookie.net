@@ -42,6 +42,13 @@ function header(form) {
   return header;
 }
 
+// set a hidden cookie with link protocol
+document.querySelectorAll('a.self').forEach(a => a.addEventListener('click', function (e) {
+  e.preventDefault(); // ensure the cookie gets set
+  document.cookie = '!proto=' + new URL(e.target.href).protocol;
+  window.location = e.target.href;
+}));
+
 document.querySelector('form').addEventListener('input', function (e) {
   if (e.target.name == 'expires') {
     // better than toggle when navigating in history
@@ -64,12 +71,14 @@ if (document.cookie) {
   let ul = document.createElement('ul');
   cookieBox.appendChild(ul);
 
-  for (let cookie of new URLSearchParams(document.cookie.replace(/; /g, '&'))) {
+  for (let [name, value] of new URLSearchParams(document.cookie.replace(/; /g, '&'))) {
       let code = document.createElement('code');
-      code.innerText = cookie[0] + ' = ' + cookie[1];
+      code.innerText = name + ' = ' + value;
 
-      let li = document.createElement('li');
-      li.appendChild(code);
-      ul.appendChild(li);
+      if (name[0] != '!') {
+          let li = document.createElement('li');
+          li.appendChild(code);
+          ul.appendChild(li);
+      }
   }
 }

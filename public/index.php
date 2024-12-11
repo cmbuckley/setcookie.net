@@ -128,15 +128,23 @@ function displayUrl($url, $main) {
     <main class="container">
       <hgroup>
         <h1>Cookie Test</h1>
-        <p>URL: <?= displayUrl($app->getUrl(), $main); ?></p>
+        <p>
+          URL: <?= displayUrl($app->getUrl(), $main); ?>
+
+          <?php if (isset($_COOKIE['!proto']) && $_COOKIE['!proto'] != ($https ? 'https:' : 'http:')): ?>
+          <small class="proto error">Did you expect an HTTP URL? Your browser might be preventing it.
+          See <a href="/no-http/">more information here</a>.</small>
+          <?php endif; ?>
+        </p>
       </hgroup>
 
+
       <p>You can test various cookie options below and how they affect which cookies are sent to different URLs, such as
-        <a href="https://a.<?= $main; ?>"><b class="subs">a.</b><?= $main; ?></a>,
-        <a href="https://a.b.<?= $main; ?>"><b class="subs">a.b.</b><?= $main; ?></a>,
-        <a href="https://<?= $main; ?>/foo"><?= $main; ?><b class="path">/foo</b></a>,
-        <a href="https://<?= $main; ?>"><b class="https">https://</b><?= $main; ?></a>, or
-        <a href="http://<?= $main; ?>"><b class="http">http://</b><?= $main; ?></a>.
+        <a class="self" href="https://a.<?= $main; ?>"><b class="subs">a.</b><?= $main; ?></a>,
+        <a class="self" href="https://a.b.<?= $main; ?>"><b class="subs">a.b.</b><?= $main; ?></a>,
+        <a class="self" href="https://<?= $main; ?>/foo"><?= $main; ?><b class="path">/foo</b></a>,
+        <a class="self" href="https://<?= $main; ?>"><b class="https">https://</b><?= $main; ?></a>, or
+        <a class="self" href="http://<?= $main; ?>"><b class="http">http://</b><?= $main; ?></a>.
         See also some <a href="https://<?= $main; ?>/quirks/">known browser quirks</a>.
       </p>
 
@@ -144,11 +152,11 @@ function displayUrl($url, $main) {
         <a class="reload" href="" title="Reload">↻</a>
 <?php
 
-if (count($_COOKIE)) {
+if (count($_COOKIE) && count(array_filter(array_keys($_COOKIE), fn($k) => $k[0] != '!'))) {
     echo "<p>Received cookies:</p><ul>\n";
 
     foreach ($_COOKIE as $n => $v) {
-        echo "<li><code>$n = $v</code></li>\n";
+        if ($n[0] != '!') { echo "<li><code>$n = $v</code></li>\n"; }
     }
 
     echo "</ul>\n\n";
