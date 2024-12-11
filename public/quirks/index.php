@@ -20,7 +20,10 @@ $main = $app->getMainHost();
   </head>
   <body>
     <main class="container">
-      <h1>Cookie Quirks</h1>
+      <hgroup>
+        <h1>Cookie Quirks</h1>
+        <p><a href="/">Back to site</a></p>
+      </hgroup>
 
       <p>Not all browsers behave the same when it comes to setting cookies. You should be aware of some key differences in behaviour:</p>
 

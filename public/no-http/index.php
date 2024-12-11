@@ -20,7 +20,10 @@ $main = $app->getMainHost();
   </head>
   <body>
     <main class="container">
-      <h1>No HTTP?</h1>
+      <hgroup>
+        <h1>No HTTP?</h1>
+        <p><a href="/">Back to site</a></p>
+      </hgroup>
 
       <p>Browsers increasingly don’t want you to visit HTTP websites! If you click an HTTP link
       and find yourself on an HTTPS page, update your browser settings to allow insecure content.</p>
