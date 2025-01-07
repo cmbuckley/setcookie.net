@@ -91,13 +91,12 @@ function callFetch() {
   }
   const credentials = document.querySelector('input[name=credentials]:checked').value
 
-  const fetchParams = {
+  console.info(`Calling fetch('/', ${JSON.stringify({method: 'POST', body: data.toString(), credentials},null, "\t")})` );
+  fetch('/', {
     method: 'POST',
     body: data,
     credentials
-  };
-  console.info(`Calling fetch('/', ${JSON.stringify(fetchParams)})` );
-  fetch('/', fetchParams)
+  })
     .then(_res => {
       console.info('fetch() returned');
       document.querySelector('a.reload').click()
