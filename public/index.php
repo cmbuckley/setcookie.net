@@ -231,6 +231,13 @@ if (isset($_POST['name'], $_POST['value'])) {
         <p>Will result in the following cookie: <samp /></p>
         <input type="submit" />
       </form>
+      <p>Credentials:
+      <label><input type="radio" name="credentials" value="same-origin" checked />same-origin</label> 
+      <label><input type="radio" name="credentials" value="include" />include</label>
+      <label><input type="radio" name="credentials" value="omit" />omit</label>
+      <small><a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#including_credentials">See MDN docs for fetch()#Include credentials</a> </small>
+      </p>
+      <button onClick="callFetch()">Call fetch()</button>
 
       <footer>
         <p><small>Created by <a href="https://cmbuckley.co.uk">Chris Buckley</a> for <a href="https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain">this Stack Overflow question</a>. <a href="https://github.com/cmbuckley/setcookie.net">View the source here</a>.</small></p>
