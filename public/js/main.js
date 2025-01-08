@@ -97,9 +97,13 @@ function callFetch() {
     body: data,
     credentials
   })
-    .then(_res => {
-      console.info('fetch() returned');
-      document.querySelector('a.reload').click()
-      console.info('Reloading cookie box');
+    .then(async function(res) {
+      console.info('fetch() returned',res);
+      const resText = await res.text();
+      const parsedRes = new DOMParser().parseFromString(resText, 'text/html');
+      const articleHtml = parsedRes.querySelector('article').innerHTML;
+      console.info('parsed response html', articleHtml);
+      document.querySelector('article').innerHTML = articleHtml;
+      console.info('Updated displayed cookie info');
     });
 }
