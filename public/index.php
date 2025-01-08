@@ -29,7 +29,6 @@ if (isset($_POST['name'], $_POST['value'])) {
     $httpOnly = (isset($_POST['httponly']) && $_POST['httponly'] === 'on');
     $expires = $app->expires();
     $samesite = $app->samesite();
-    $isFetch = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'fetch';
 
     try {
         if (empty($name) || empty($value)) {
@@ -88,11 +87,6 @@ if (isset($_POST['name'], $_POST['value'])) {
 
         setcookie($name, $value, $opts);
         $message = 'Sent header: <code>' . $app->getSentHeader() . '</code>';
-        if($isFetch) { 
-            header('Content-type: application/json');
-            echo json_encode(['existing_cookies' => $_COOKIE, 'set_cookie_header' => $app->getSentHeader()]);
-            exit;
-        }
     } catch (Exception $ex) {
         $error = $ex->getMessage();
     }
@@ -118,8 +112,6 @@ function displayUrl($url, $main) {
 
     return '<b class="url">' . $formatted . '</b> <i>(' . implode(', ', $facts) . ')</i>';
 }
-
-
 
 ?>
 <!doctype html>

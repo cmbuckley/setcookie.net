@@ -95,14 +95,11 @@ function callFetch() {
   fetch('/', {
     method: 'POST',
     body: data,
-    headers: {
-      'X-Requested-With': 'fetch',
-    },
     credentials
   })
     .then(_res => {
       console.info('fetch() returned');
-      // document.querySelector('a.reload').click()
+      document.querySelector('a.reload').click()
       console.info('Reloading cookie box');
     });
 }
