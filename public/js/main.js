@@ -83,27 +83,33 @@ if (document.cookie) {
   }
 }
 
-function callFetch() {
-  const data = new URLSearchParams();
-  const formElement = document.querySelector('form');
-  for (const pair of new FormData(formElement)) {
-    data.append(pair[0], pair[1]);
-  }
-  const credentials = document.querySelector('input[name=credentials]:checked').value
+// show Fetch section for JS browsers
+const fetchSection = document.querySelector('.fetch');
+fetchSection.classList.remove('hidden');
 
-  console.info(`Calling fetch('/', ${JSON.stringify({method: 'POST', body: data.toString(), credentials},null, "\t")})` );
+function callFetch() {
+  const data = new URLSearchParams(new FormData(document.querySelector('form')));
+  const credentials = document.querySelector('input[name=credentials]:checked').value;
+  fetchSection.querySelector('.error')?.remove();
+
+  console.info('Calling Fetch API', {body: data.toString(), credentials});
   fetch('/', {
     method: 'POST',
     body: data,
-    credentials
-  })
-    .then(async function(res) {
-      console.info('fetch() returned',res);
-      const resText = await res.text();
-      const parsedRes = new DOMParser().parseFromString(resText, 'text/html');
-      const articleHtml = parsedRes.querySelector('article').innerHTML;
-      console.info('parsed response html', articleHtml);
-      document.querySelector('article').innerHTML = articleHtml;
+    credentials,
+  }).then(async res => {
+    console.info('Fetch returned', res);
+    const resText = await res.text();
+    const parsedRes = new DOMParser().parseFromString(resText, 'text/html');
+    const article = parsedRes.querySelector('article');
+
+    console.info('Parsed response HTML:', article.innerHTML);
+    const error = article.querySelector('.error');
+    if (error) {
+      fetchSection.appendChild(error);
+    } else {
+      document.querySelector('article').innerHTML = article.innerHTML;
       console.info('Updated displayed cookie info');
-    });
+    }
+  });
 }
