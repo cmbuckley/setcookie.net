@@ -82,3 +82,28 @@ if (document.cookie) {
       }
   }
 }
+
+function callFetch() {
+  const data = new URLSearchParams();
+  const formElement = document.querySelector('form');
+  for (const pair of new FormData(formElement)) {
+    data.append(pair[0], pair[1]);
+  }
+  const credentials = document.querySelector('input[name=credentials]:checked').value
+
+  console.info(`Calling fetch('/', ${JSON.stringify({method: 'POST', body: data.toString(), credentials},null, "\t")})` );
+  fetch('/', {
+    method: 'POST',
+    body: data,
+    credentials
+  })
+    .then(async function(res) {
+      console.info('fetch() returned',res);
+      const resText = await res.text();
+      const parsedRes = new DOMParser().parseFromString(resText, 'text/html');
+      const articleHtml = parsedRes.querySelector('article').innerHTML;
+      console.info('parsed response html', articleHtml);
+      document.querySelector('article').innerHTML = articleHtml;
+      console.info('Updated displayed cookie info');
+    });
+}
