@@ -17,7 +17,7 @@ jobs:
           number=$(curl -s ${{ github.event.workflow_run.jobs_url }} |
             jq -r '.jobs[0].steps | map(select(.number == 2)) | first.name')
           echo "number=$number" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: ${{ github.event.workflow_run.head_repository.full_name }}
           ref: ${{ github.event.workflow_run.head_branch }}
