@@ -6,10 +6,17 @@ on:
   workflow_run:
     workflows: New Pull Request
     types: completed
+
 jobs:
-  comment:
+  deploy:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    outputs:
+      number: ${{ steps.number.outputs.number }}
+      url: ${{ steps.deploy.outputs.url }}
+    environment:
+      name: ${{ steps.deploy.outputs.app }}
+      url: ${{ steps.deploy.outputs.url }}
     steps:
       - name: Find PR number
         id: number
@@ -17,30 +24,42 @@ jobs:
           number=$(curl -s ${{ github.event.workflow_run.jobs_url }} |
             jq -r '.jobs[0].steps | map(select(.number == 2)) | first.name')
           echo "number=$number" >> $GITHUB_OUTPUT
+
       - uses: actions/checkout@v5
         with:
           repository: ${{ github.event.workflow_run.head_repository.full_name }}
           ref: ${{ github.event.workflow_run.head_branch }}
+
       - uses: superfly/flyctl-actions/setup-flyctl@v1
       - name: Deploy preview app
+        id: deploy
         run: |
           app_name="setcookie-staging-${{ steps.number.outputs.number }}"
+          echo "app=$app_name" >> $GITHUB_OUTPUT
+          echo "url=https://$app_name.fly.dev" >> $GITHUB_OUTPUT
+
           flyctl apps list | grep "$app_name" || flyctl apps create "$app_name"
           flyctl deploy --remote-only -a "$app_name" -e APP_ENV=staging
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  comment:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
       - name: Find Comment
         uses: peter-evans/find-comment@v3
         id: find-comment
         with:
-          issue-number: ${{ steps.number.outputs.number }}
+          issue-number: ${{ needs.deploy.outputs.number }}
           comment-author: 'github-actions[bot]'
           body-includes: Your deploy preview
+
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v4
         with:
-          issue-number: ${{ steps.number.outputs.number }}
+          issue-number: ${{ needs.deploy.outputs.number }}
           comment-id: ${{ steps.find-comment.outputs.comment-id }}
           edit-mode: replace
           body: >
-            Your deploy preview can be found at https://setcookie-staging-${{ steps.number.outputs.number }}.fly.dev.
+            Your deploy preview can be found at ${{ needs.deploy.outputs.url }}.
