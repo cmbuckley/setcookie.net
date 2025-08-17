@@ -127,7 +127,7 @@ function displayUrl($url, $main) {
   <body>
     <main class="container">
       <hgroup>
-        <h1>Cookie Test</h1>
+        <h1>Cookie Test (WITH ENV)</h1>
         <p>
           URL: <?= displayUrl($app->getUrl(), $main); ?>
 
