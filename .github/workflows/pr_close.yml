@@ -13,3 +13,11 @@ jobs:
           flyctl apps destroy -y "setcookie-staging-${{ github.event.number }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Delete environment
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          output=$(gh api -X DELETE repos/${{ github.repository }}/environments/setcookie-staging-${{ github.event.number }}) || code=$?
+          echo "$output"
+          [ $code -eq 0 -o $(jq -re .status <<< $output || echo 0) -eq 404 ] || exit $code
