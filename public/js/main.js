@@ -113,3 +113,28 @@ function callFetch() {
     }
   });
 }
+
+function doRequestStorageAccess() {
+  let resultDiv = document.querySelector('#requestStorageAccessResult');
+  resultDiv.innerHTML = 'Requesting...';
+  document.requestStorageAccess().then(
+    () => {
+      resultDiv.innerHTML = 'Cookie access granted';
+    },
+    () => {
+      resultDiv.innerHTML = 'Cookie access denied';
+    },
+  );
+}
+
+window.addEventListener('load', function() {
+  let resultDiv = document.querySelector('#hasStorageAccessResult');
+  document.hasStorageAccess().then(
+    (hasAccess) => {
+      resultDiv.innerHTML = "<b>hasStorageAccess result: </b>" + hasAccess.toString();
+    },
+    function (reason) {
+      resultDiv.innerHTML = "<b>hasStorageAccess failed with: </b>" + reason.toString();
+    }
+  );
+});

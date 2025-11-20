@@ -149,6 +149,15 @@ function displayUrl($url, $main) {
         See also some <a href="https://<?= $main; ?>/quirks/">known browser quirks</a>.
       </p>
 
+      <p>
+        Implicit Third-party cookies are <a href="https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/" target="_blank">fully blocked</a>
+        by WebKit as of iOS 13.4 and Safari 13.1, so this site is not expected to be able to set cookies if embeded in an iframe in a third-party.
+        The linked article explains that calling `document.requestStorageAccess();` is necessary to request permission to use cookies in this context.
+        <div id="hasStorageAccessResult"></div>
+        <button onClick="doRequestStorageAccess()">Request storage access</button>
+        <div id="requestStorageAccessResult"></div>
+      </p>
+
       <article>
         <a class="reload" href="" title="Reload">↻</a>
 <?php
