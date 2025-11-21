@@ -1,4 +1,4 @@
-FROM php:8.4-apache
+FROM php:8.5-apache
 RUN a2enmod rewrite headers
 COPY public /var/www/html
 COPY src /var/www/src
