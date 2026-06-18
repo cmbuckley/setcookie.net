@@ -34,6 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          allow-unsafe-pr-checkout: true
           repository: ${{ github.event.workflow_run.head_repository.full_name }}
           ref: ${{ github.event.workflow_run.head_branch }}
 
