@@ -32,8 +32,9 @@ jobs:
       name: ${{ needs.get-number.outputs.app-name }}
       url: ${{ steps.deploy.outputs.url }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
+          allow-unsafe-pr-checkout: true
           repository: ${{ github.event.workflow_run.head_repository.full_name }}
           ref: ${{ github.event.workflow_run.head_branch }}
 
